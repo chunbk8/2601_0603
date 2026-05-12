@@ -12,11 +12,8 @@ public abstract class GShape {
         eResize //실제로 6개가 나옴. 점마다
     }
 
-    public GShape(int x0, int y0, int x1, int y1) {
-        this.x0=x0;
-        this.y0=y0;
-        this.x1=x1;
-        this.y1=y1;
+    public GShape() {
+
     }
 
     public EAnchor onShape(int x, int y) {

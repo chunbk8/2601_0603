@@ -47,7 +47,6 @@ public class GDrawingPanel extends JPanel {
     }
 
     @Override
-    // ✅ 수정 1: paintComponents → paintComponent
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -60,9 +59,10 @@ public class GDrawingPanel extends JPanel {
 
 
     private void startDrawing(int x, int y) {
-
+//상태나 이벤트에 대한 판단에 향하는 걸 이벤트 핸들러로 뺌
+        //여긴 정말 해야하는 액셔남ㄴ 작성한 것
         //double buffering 준비하는 과정
-        if (getWidth() <= 0 || getHeight() <= 0 || eDrawingState == EDrawingState.eIdle) { //그림 영역이 0이거나 || 상태가 eIdle일 떄
+        if (getWidth() <= 0 || getHeight() <= 0 ) { //그림 영역이 0이거나 || 상태가 eIdle일 떄
             return;
         }
 
@@ -82,16 +82,15 @@ public class GDrawingPanel extends JPanel {
     }
     private void startNewShape(int x, int y) {
         //새로운 쉐입을 만드려고 준비하는 함수
-        if (toolBar.getShapeType() == GConstants.EShapeType.eOval) { //context
-            currentShape = new GOval(x, y, x, y);
-        }
-        else if (toolBar.getShapeType() == GConstants.EShapeType.eRectangle) {
-            currentShape = new GRectangle(x, y, x, y);
-        }
+
+        currentShape = toolBar.getShapeType().getShape();
+        currentShape.setLocation0(x, y);
+        currentShape.setLocation1(x, y);
 
     }
 
     private void startTransform(int x, int y) {
+        this.currentShape.setLocation1(x, y);
         for (GShape shape : shapes) { //startTransform
             GShape.EAnchor eAnchor = shape.onShape(x,y);
             if (eAnchor != null ) {
@@ -109,44 +108,45 @@ public class GDrawingPanel extends JPanel {
 
     }
 
-    private void keepRectangularShape(int x, int y) {
-        if (this.eDrawingState != EDrawingState.eIdle) {
+    private void keepTransform(int x, int y) {
+        //double buffering 을 위한 graphics 도구 설정 (위로 뺴기)
+        Graphics2D bufferGraphics = this.bufferImage.createGraphics();
+        bufferGraphics.setColor(this.getBackground());
+        bufferGraphics.fillRect(0, 0, this.getWidth(), this.getHeight());
+        bufferGraphics.setColor(Color.BLACK);
+
+
+        //상태에 따라
+        if (this.eDrawingState == EDrawingState.eDrawing) {
             this.currentShape.setLocation1(x, y);
-
-            Graphics2D bufferGraphics = this.bufferImage.createGraphics();
-            bufferGraphics.setColor(this.getBackground());
-            bufferGraphics.fillRect(0, 0, this.getWidth(), this.getHeight());
-            bufferGraphics.setColor(Color.BLACK);
-
-            if (this.eDrawingState == EDrawingState.eDrawing) {
-                this.currentShape.setLocation1(x, y);
-                //여긴 새 그림을 그리는 거
-                this.currentShape.draw(bufferGraphics);
-            } else if (this.eDrawingState == EDrawingState.eMoving) {
-                this.currentShape.move(x, y);
-            } else if (this.eDrawingState == EDrawingState.eResizing) {
-                this.currentShape.resize(x, y);
-            }else if (this.eDrawingState == EDrawingState.eRotating) {
-                this.currentShape.rotate(x, y);
-            }
-            for (GShape shape : this.shapes) {
-                shape.draw(bufferGraphics);
-                //여기서 그리는 건 도형 저장
-            }
-            //this.currentShape.draw(bufferGraphics);
-            bufferGraphics.dispose();
-            repaint();
-
+            //여긴 새 그림을 그리는 거
+            this.currentShape.draw(bufferGraphics);
+        } else if (this.eDrawingState == EDrawingState.eMoving) {
+            //다이렉트로 에넘에 뭘 집어넣고 그냥 했으면 좋겠다는데? 뭔 개소리지. 이프엘스를 하지말고
+            this.currentShape.move(x, y);
+        } else if (this.eDrawingState == EDrawingState.eResizing) {
+            this.currentShape.resize(x, y);
+        }else if (this.eDrawingState == EDrawingState.eRotating) {
+            this.currentShape.rotate(x, y);
         }
+        for (GShape shape : this.shapes) {
+            shape.draw(bufferGraphics);
+            //여기서 그리는 건 도형 저장
+        }
+        //this.currentShape.draw(bufferGraphics);
+        bufferGraphics.dispose();
+        repaint();
 
     }
 
-    private void finishRectangularShape() {
-        if (this.eDrawingState != EDrawingState.eIdle) {
-            if (this.eDrawingState == EDrawingState.eDrawing) {
-                this.shapes.add(this.currentShape);
-            }
-            this.eDrawingState = EDrawingState.eIdle; //상태 원위치
+    private void continueDrawing(int x, int y) {
+        // n개의 라인을 그려서 만드는 도형이 일반화되어 여러 다각형을 그리게끔 기능이 추가될 수도 있음
+        //그래서 몇개의 점으로 만들어지는 도형인지 컨텍스트를 추가하는게 좋아.
+    }
+
+    private void finishTransform(int x, int y) {
+        if (this.eDrawingState == EDrawingState.eDrawing) {
+            this.shapes.add(this.currentShape);
             this.currentShape = null;
         }
 
@@ -154,22 +154,50 @@ public class GDrawingPanel extends JPanel {
     }
 
     private class MouseHandler implements MouseListener, MouseMotionListener {
+        private void mouseButton1Click(MouseEvent e){
+            if (eDrawingState == EDrawingState.eIdle) { //target state
+                if (toolBar.getShapeType() == GConstants.EShapeType.ePolygon) { //context
+                    //select
+                    startNewShape(e.getX(), e.getY());
+                }
+                startDrawing(e.getX(), e.getY());//prepare for double buffering
+            } else {
+                //addLine
+                continueDrawing(e.getX(), e.getY());
+            }
+
+
+
+        }
+        private void mouseButton2Click(MouseEvent e){
+            if (eDrawingState != EDrawingState.eIdle) {
+                finishTransform(e.getX(), e.getY());
+                eDrawingState = EDrawingState.eIdle;
+            }
+
+
+        }
         @Override
-        public void mouseClicked(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e) {
+
+        }
         @Override
-        public void mouseMoved(MouseEvent e) {}
+        public void mouseMoved(MouseEvent e) {
+            if (eDrawingState != EDrawingState.eIdle) {
+                keepTransform(e.getX(), e.getY());
+            }
+        }
+
         @Override
         public void mousePressed(MouseEvent e) {
             //startRectangularShape(e.getX(),e.getY());
-            int x = e.getX();
-            int y = e.getY();
             if (eDrawingState == EDrawingState.eIdle) { //target state
                 if (toolBar.getShapeType() == GConstants.EShapeType.eSelect) { //context
                     //select
-                    startTransform(x, y);
+                    startTransform(e.getX(),e.getY());
                 } else { //select가 아니면 다 드로잉
                     // drawing
-                    startNewShape(x, y);
+                    startNewShape(e.getX(),e.getY());
                     eDrawingState = EDrawingState.eDrawing;
                 }
                 startDrawing(e.getX(),e.getY()); //prepare for double buffering
@@ -178,15 +206,22 @@ public class GDrawingPanel extends JPanel {
         }
         @Override
         public void mouseDragged(MouseEvent e) {
-            keepRectangularShape(e.getX(), e.getY());
+            if (eDrawingState != EDrawingState.eIdle) {
+                keepTransform(e.getX(), e.getY());
+            }
 
         }
         @Override
         public void mouseReleased(MouseEvent e) {
-            finishRectangularShape();
+            if (eDrawingState != EDrawingState.eIdle) {
+                finishTransform(e.getX(), e.getY());
+                eDrawingState = EDrawingState.eIdle;
+            }
 
         }
         @Override public void mouseEntered(MouseEvent e) {}
         @Override public void mouseExited(MouseEvent e) {}
     }
+
+
 }

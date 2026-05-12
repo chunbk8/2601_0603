@@ -84,8 +84,9 @@ public class GDrawingPanel extends JPanel {
         //새로운 쉐입을 만드려고 준비하는 함수
 
         currentShape = toolBar.getShapeType().getShape();
+        /*2포인트에만 사용하는 방법이라 뺄 거임
         currentShape.setLocation0(x, y);
-        currentShape.setLocation1(x, y);
+        currentShape.setLocation1(x, y);*/
 
     }
 
@@ -156,14 +157,17 @@ public class GDrawingPanel extends JPanel {
     private class MouseHandler implements MouseListener, MouseMotionListener {
         private void mouseButton1Click(MouseEvent e){
             if (eDrawingState == EDrawingState.eIdle) { //target state
-                if (toolBar.getShapeType() == GConstants.EShapeType.ePolygon) { //context
-                    //select
+                if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.eNPoint) { //context
                     startNewShape(e.getX(), e.getY());
+                    startDrawing(e.getX(), e.getY());//prepare for double buffering
                 }
-                startDrawing(e.getX(), e.getY());//prepare for double buffering
+
             } else {
-                //addLine
-                continueDrawing(e.getX(), e.getY());
+                if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.eNPoint) {
+                    //addLine
+                    continueDrawing(e.getX(), e.getY());
+                }
+
             }
 
 
@@ -171,8 +175,10 @@ public class GDrawingPanel extends JPanel {
         }
         private void mouseButton2Click(MouseEvent e){
             if (eDrawingState != EDrawingState.eIdle) {
-                finishTransform(e.getX(), e.getY());
-                eDrawingState = EDrawingState.eIdle;
+                if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.eNPoint) {
+                    finishTransform(e.getX(), e.getY());
+                    eDrawingState = EDrawingState.eIdle;
+                }
             }
 
 
@@ -184,7 +190,9 @@ public class GDrawingPanel extends JPanel {
         @Override
         public void mouseMoved(MouseEvent e) {
             if (eDrawingState != EDrawingState.eIdle) {
-                keepTransform(e.getX(), e.getY());
+                if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.eNPoint) {
+                    keepTransform(e.getX(), e.getY());
+                }
             }
         }
 
@@ -192,15 +200,18 @@ public class GDrawingPanel extends JPanel {
         public void mousePressed(MouseEvent e) {
             //startRectangularShape(e.getX(),e.getY());
             if (eDrawingState == EDrawingState.eIdle) { //target state
-                if (toolBar.getShapeType() == GConstants.EShapeType.eSelect) { //context
-                    //select
-                    startTransform(e.getX(),e.getY());
-                } else { //select가 아니면 다 드로잉
-                    // drawing
-                    startNewShape(e.getX(),e.getY());
-                    eDrawingState = EDrawingState.eDrawing;
+                if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.e2Point) {
+                    if (toolBar.getShapeType() == GConstants.EShapeType.eSelect) { //context
+                        //select
+                        startTransform(e.getX(),e.getY());
+                    } else { //select가 아니면 다 드로잉
+                        // drawing
+                        startNewShape(e.getX(),e.getY());
+                        eDrawingState = EDrawingState.eDrawing;
+                    }
+                    startDrawing(e.getX(),e.getY()); //prepare for double buffering
                 }
-                startDrawing(e.getX(),e.getY()); //prepare for double buffering
+
             }
 
         }

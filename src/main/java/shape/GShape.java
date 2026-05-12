@@ -1,8 +1,9 @@
 package shape;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
-public abstract class GShape {
+public abstract class GShape implements Cloneable{
     protected int x0, y0, x1, y1;
 
 
@@ -14,6 +15,13 @@ public abstract class GShape {
 
     public GShape() {
 
+    }
+    public GShape clone() {
+        try {
+            return (GShape) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public EAnchor onShape(int x, int y) {

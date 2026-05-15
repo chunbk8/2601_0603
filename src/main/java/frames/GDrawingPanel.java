@@ -155,7 +155,7 @@ public class GDrawingPanel extends JPanel {
     }
 
     private class MouseHandler implements MouseListener, MouseMotionListener {
-        private void mouseButton1Click(MouseEvent e){
+        private void mouseLButton1Clicked (MouseEvent e){
             if (eDrawingState == EDrawingState.eIdle) { //target state
                 if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.eNPoint) { //context
                     startNewShape(e.getX(), e.getY());
@@ -173,7 +173,7 @@ public class GDrawingPanel extends JPanel {
 
 
         }
-        private void mouseButton2Click(MouseEvent e){
+        private void mouseLButton2Clicked(MouseEvent e){
             if (eDrawingState != EDrawingState.eIdle) {
                 if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.eNPoint) {
                     finishTransform(e.getX(), e.getY());
@@ -185,7 +185,13 @@ public class GDrawingPanel extends JPanel {
         }
         @Override
         public void mouseClicked(MouseEvent e) {
-
+            if (e.getButton() == 1) { // left button
+                if (e.getClickCount() == 1) { // single click
+                    mouseLButton1Clicked(e);
+                } else if (e.getClickCount() == 2) { // double click
+                    mouseLButton2Clicked(e);
+                }
+            }
         }
         @Override
         public void mouseMoved(MouseEvent e) {

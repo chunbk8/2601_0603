@@ -5,6 +5,7 @@ import java.awt.*;
 public class GRectangle extends GShape{
 
     public GRectangle() {
+        this.shape = new Rectangle();
 
     }
 

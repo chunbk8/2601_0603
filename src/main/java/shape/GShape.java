@@ -1,8 +1,6 @@
 package shape;
 
 import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
-
 public abstract class GShape implements Cloneable{
     protected int x0, y0, x1, y1;
 
@@ -12,7 +10,7 @@ public abstract class GShape implements Cloneable{
         eMove,
         eResize //실제로 6개가 나옴. 점마다
     }
-
+    protected Shape shape;
     public GShape() {
 
     }

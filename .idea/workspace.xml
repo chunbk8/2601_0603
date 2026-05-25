@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="0512 : 대규모 업데이트 전">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="0519 - e2Point 구현까지">
+      <change afterPath="$PROJECT_DIR$/src/main/java/transformer/GDrawer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/transformer/GTransformer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$EDrawingState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$EDrawingState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GShapeToolBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GShapeToolBar.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shape/GOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GOval.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shape/GRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GRectangle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shape/GShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GShape.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GShapeToolBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GShapeToolBar.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +130,23 @@
       <option name="project" value="LOCAL" />
       <updated>1778574961220</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="0512 - 수업 진도까지">
+      <option name="closed" value="true" />
+      <created>1778837625830</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1778837625830</updated>
+    </task>
+    <task id="LOCAL-00006" summary="0512 - 수업 진도까지">
+      <option name="closed" value="true" />
+      <created>1778838228384</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1778838228384</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -145,7 +164,9 @@
     <MESSAGE value="0505" />
     <MESSAGE value="0512" />
     <MESSAGE value="0512 : 대규모 업데이트 전" />
-    <option name="LAST_COMMIT_MESSAGE" value="0512 : 대규모 업데이트 전" />
+    <MESSAGE value="0512 - 수업 진도까지" />
+    <MESSAGE value="0519 - e2Point 구현까지" />
+    <option name="LAST_COMMIT_MESSAGE" value="0519 - e2Point 구현까지" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

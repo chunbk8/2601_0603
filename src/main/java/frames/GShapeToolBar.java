@@ -23,7 +23,7 @@ public class GShapeToolBar extends JToolBar {
         ButtonGroup group = new ButtonGroup();
 
         for (GConstants.EShapeType Type : GConstants.EShapeType.values()) {
-            JRadioButton radioButton = new JRadioButton(Type.getName(), new ImageIcon("images\4.png"));
+            JRadioButton radioButton = new JRadioButton(Type.getName());
             this.add(radioButton);
             group.add(radioButton);
             radioButton.addActionListener(actionHandler);

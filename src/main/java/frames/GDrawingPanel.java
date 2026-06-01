@@ -6,6 +6,7 @@ import shape.GShape;
 import shape.GRectangle;
 import transformer.GDrawer;
 import transformer.GTransformer;
+import transformer.GTranslator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,7 +97,8 @@ public class GDrawingPanel extends JPanel {
                     if (eAnchor == GShape.EAnchor.eRotate) {
                         this.transformer = new GDrawer(shape);
                     } else if (eAnchor == GShape.EAnchor.eMove) {
-                        this.transformer = new GDrawer(shape);
+                        this.transformer = new GTranslator(shape) {
+                        };
                     } else { //resize
                         this.transformer = new GDrawer(shape);
                     }
@@ -135,6 +137,7 @@ public class GDrawingPanel extends JPanel {
     }
 
     private void continueDrawing(int x, int y) {
+        this.transformer.cont(x,y);
     }
 
     private void finishTransform(int x, int y) {
@@ -162,9 +165,10 @@ public class GDrawingPanel extends JPanel {
                     eDrawingState = EDrawingState.eTransforming;
 
                 }
-            } else {
-                //addLine
-                continueDrawing(e.getX(), e.getY());
+                else {
+                    //addLine
+                    continueDrawing(e.getX(), e.getY());
+                }
             }
 
         }

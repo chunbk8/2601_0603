@@ -2,11 +2,13 @@ package transformer;
 
 import shape.GShape;
 
-import java.awt.*;
 
-public class GDrawer extends GTransformer {
-    public GDrawer(GShape shape){
-        //수정해야 할 도형을 받아서 부모에 저장시킴
+public class GTranslator extends GTransformer {
+
+    private int x0;
+    private int y0;
+
+    public GTranslator(GShape shape){
         super(shape);
 
     }
@@ -14,23 +16,26 @@ public class GDrawer extends GTransformer {
     //2PointSequence
     @Override
     public void start(int x, int y) {
-        shape.setLocation0(x, y);
-
+        this.x0 = x;
+        this.y0 = y;
     }
 
     @Override
     public void keep(int x, int y) {
-        shape.setLocation1(x, y);
+        int dx = x-x0;
+        int dy = y-y0;
+
+       shape.translate(dx, dy);
+        this.x0 = x;
+        this.y0 = y;
+        //무슨 의미?
 
     }
-
     @Override
     public void finish(int x, int y) {
-        shape.setLocation1(x, y);
 
     }
     @Override
     public void cont(int x, int y) {
-        shape.addPoint(x,y);
     }
 }

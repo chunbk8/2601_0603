@@ -2,6 +2,7 @@ package global;
 
 
 import shape.GOval;
+import shape.GPolygon;
 import shape.GRectangle;
 import shape.GShape;
 
@@ -20,7 +21,7 @@ public class GConstants {
         eRectangle("네모", new GRectangle(), EDrawingType.e2Point),
         eOval("동그라미", new GOval(), EDrawingType.e2Point),
         eLine("라인", new GRectangle(), EDrawingType.e2Point),
-        ePolygon("폴리곤", new GRectangle(), EDrawingType.eNPoint);
+        ePolygon("폴리곤", new GPolygon(), EDrawingType.eNPoint);
 
 
         private final String name;

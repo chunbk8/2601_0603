@@ -2,6 +2,8 @@ package transformer;
 
 import shape.GShape;
 
+import java.awt.geom.AffineTransform;
+
 
 public class GTranslator extends GTransformer {
 
@@ -25,7 +27,12 @@ public class GTranslator extends GTransformer {
         int dx = x-x0;
         int dy = y-y0;
 
-       shape.translate(dx, dy);
+        //AffineTransform 을 사용하는 방법
+        /*AffineTransform affineTransform = shape.getAffineTransform();
+        affineTransform.translate(dx,dy);*/
+
+        //Shape이 직접 계산하는 방법
+        shape.translate(dx, dy);
         this.x0 = x;
         this.y0 = y;
         //무슨 의미?

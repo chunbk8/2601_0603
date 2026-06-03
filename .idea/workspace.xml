@@ -5,25 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="0519 - e2Point 구현까지">
-      <change afterPath="$PROJECT_DIR$/src/main/java/transformer/GTranslator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/transformer/GRotate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/transformer/GScale.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$EDrawingState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$EDrawingState.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EDrawingType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EDrawingType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EShapeType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EShapeType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GPolygon.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GPolygon.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape$EAnchor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape$EAnchor.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GDrawer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GDrawer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GTranslator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GTranslator.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/global/GConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/global/GConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shape/GOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GOval.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shape/GPolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GPolygon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shape/GRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GRectangle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shape/GShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GShape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/transformer/GDrawer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/transformer/GDrawer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/transformer/GTranslator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/transformer/GTranslator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +35,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -212,11 +209,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/transformer/GDrawer.java</url>
           <line>22</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java</url>
-          <line>125</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

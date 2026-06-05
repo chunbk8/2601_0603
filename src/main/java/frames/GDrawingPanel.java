@@ -30,6 +30,7 @@ public class GDrawingPanel extends JPanel {
 
     //associations
     private GShapeToolBar toolBar;
+    private GStyleToolBar styleToolBar;
 
 
     //constructors
@@ -53,6 +54,9 @@ public class GDrawingPanel extends JPanel {
         //association을 부를 때 메서드를 통해 불러야 함
     public void associateWith(GShapeToolBar toolBar) {
         this.toolBar = toolBar;
+    }
+    public void associateWith(GStyleToolBar styleToolBar) {
+        this.styleToolBar = styleToolBar;
     }
 
     @Override
@@ -109,7 +113,6 @@ public class GDrawingPanel extends JPanel {
 
             // 3. 클릭된 도형이 있다면 알맞은 Transformer 쥐어주기
             if (clickedShape != null) {
-                // 수정됨: onShape가 반환하는 eRR을 회전으로 인식하도록 조건 추가!
                 if (clickedAnchor == GShape.EAnchor.eRotate || clickedAnchor == GShape.EAnchor.eRotate) {
                     this.transformer = new GRotater(clickedShape);
                 } else if (clickedAnchor == GShape.EAnchor.eMove) {
@@ -130,7 +133,7 @@ public class GDrawingPanel extends JPanel {
                 shape.setSelected(false);
             }
             GShape currentShape = toolBar.getShapeType().getShape();
-            currentShape.setSelected(true);
+            currentShape.setSelected(false);
 
             this.shapes.add(currentShape);
             this.transformer = new GDrawer(currentShape);

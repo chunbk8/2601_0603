@@ -4,15 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="0605 수정 전 : 초기">
+    <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="0605 : transform 구현완">
+      <change afterPath="$PROJECT_DIR$/src/main/java/frames/GStyleToolBar.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frames/GToolPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/shape/GLine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/shape/GPen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EDrawingType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EDrawingType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EShapeType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EShapeType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shape/GOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GOval.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shape/GPolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GPolygon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shape/GRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GRectangle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GMainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GMainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/global/GConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/global/GConstants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shape/GShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GShape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/transformer/GRotater.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/transformer/GRotater.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/transformer/GScale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/transformer/GScale.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,7 +195,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780644366659</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="0605 : transform 구현완">
+      <option name="closed" value="true" />
+      <created>1780653182517</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1780653182517</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -209,7 +225,8 @@
     <MESSAGE value="0519 - e2Point 구현까지" />
     <MESSAGE value="0603 수업 코드" />
     <MESSAGE value="0605 수정 전 : 초기" />
-    <option name="LAST_COMMIT_MESSAGE" value="0605 수정 전 : 초기" />
+    <MESSAGE value="0605 : transform 구현완" />
+    <option name="LAST_COMMIT_MESSAGE" value="0605 : transform 구현완" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

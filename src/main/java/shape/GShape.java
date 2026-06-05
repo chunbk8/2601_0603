@@ -65,7 +65,7 @@ public abstract class GShape implements Cloneable{
         isSelected = selected;
     }
 
-    private Ellipse2D getAnchor(int x, int y) {
+    protected Ellipse2D getAnchor(int x, int y) {
         //타원 생성 - 타원의 좌표와 크기를 float(32bit)로 저장
         return new Ellipse2D.Float(x-ANCHOR_WIDTH/2, y-ANCHOR_HEIGHT/2, ANCHOR_WIDTH, ANCHOR_HEIGHT);
     }
@@ -100,11 +100,12 @@ public abstract class GShape implements Cloneable{
             if (getAnchor(x_+w/2, y_-30).contains(p.x,p.y)) return EAnchor.eRotate;
         }
 
-        if(this.shape.contains(p.x,p.y)) {
+        if (this.shape.intersects(p.x - 5, p.y - 5, 10, 10)) {
             return EAnchor.eMove;
         } else {
             return null;
         }
+
     }
     public void draw (Graphics2D g) {
         g.rotate(this.angle, this.rotCx, this.rotCy);
@@ -121,7 +122,7 @@ public abstract class GShape implements Cloneable{
             this.drawAnchors(g);
         }*/
     }
-    private void drawAnchors(Graphics2D g) {
+    protected void drawAnchors(Graphics2D g) {
         Rectangle r = this.shape.getBounds();
         int w = r.width;
         int h = r.height;

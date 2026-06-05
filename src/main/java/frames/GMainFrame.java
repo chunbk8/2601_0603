@@ -11,7 +11,8 @@ public class GMainFrame extends JFrame {
 
     //component 자식 부품  (얘도 어그리게이션)
     private GMenuBar menuBar;
-    private GShapeToolBar toolBar;
+    private GToolPanel toolPanel;
+
     private GDrawingPanel drawingPanel;
 
     //associations 친구 관계 (얘도 어그리게이션)
@@ -30,13 +31,14 @@ public class GMainFrame extends JFrame {
         this.menuBar = new GMenuBar();
         this.setJMenuBar(menuBar); //등록
 
-        this.toolBar = new GShapeToolBar();
-        this.add(toolBar, BorderLayout.NORTH); //등록
+        this.toolPanel = new GToolPanel();
+        this.add(toolPanel, BorderLayout.NORTH); //등록
 
         this.drawingPanel = new GDrawingPanel();
         this.add(drawingPanel, BorderLayout.CENTER);
 
-        this.drawingPanel.associateWith(this.toolBar);
+        this.drawingPanel.associateWith(this.toolPanel.getToolBar());
+        this.drawingPanel.associateWith(this.toolPanel.getStyleToolBar());
 
     }
 

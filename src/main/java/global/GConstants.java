@@ -1,10 +1,7 @@
 package global;
 
 
-import shape.GOval;
-import shape.GPolygon;
-import shape.GRectangle;
-import shape.GShape;
+import shape.*;
 
 public class GConstants {
 
@@ -20,8 +17,9 @@ public class GConstants {
         eSelect("선택", new GRectangle(), EDrawingType.e2Point),
         eRectangle("네모", new GRectangle(), EDrawingType.e2Point),
         eOval("동그라미", new GOval(), EDrawingType.e2Point),
-        eLine("라인", new GRectangle(), EDrawingType.e2Point),
-        ePolygon("폴리곤", new GPolygon(), EDrawingType.eNPoint);
+        eLine("라인", new GLine(), EDrawingType.e2Point),
+        ePolygon("폴리곤", new GPolygon(), EDrawingType.eNPoint),
+        ePen("펜", new GPen(), EDrawingType.e2Point);
 
 
         private final String name;

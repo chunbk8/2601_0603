@@ -5,11 +5,11 @@ import shape.GShape;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class GRotate extends GTransformer{
+public class GRotater extends GTransformer{
     private double startAngle;
     private Point center;
 
-    public GRotate(GShape shape) {
+    public GRotater(GShape shape) {
         super(shape);
     }
 

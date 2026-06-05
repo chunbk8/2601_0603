@@ -1,9 +1,7 @@
 package frames;
 
 import global.GConstants;
-import shape.GOval;
 import shape.GShape;
-import shape.GRectangle;
 import transformer.*;
 
 import javax.swing.*;
@@ -89,24 +87,51 @@ public class GDrawingPanel extends JPanel {
     private void startTransform(int x, int y) {
         //context check
         if (toolBar.getShapeType() == GConstants.EShapeType.eSelect) { //context
-            for (GShape shape : shapes) { //startTransform
-                GShape.EAnchor eAnchor = shape.onShape(x, y);
-                if (eAnchor != null) {
-                    if (eAnchor == GShape.EAnchor.eRotate) {
-                        this.transformer = new GRotate(shape);
-                    } else if (eAnchor == GShape.EAnchor.eMove) {
-                        this.transformer = new GTranslator(shape) {
-                        };
-                    } else { //resize
-                        this.transformer = new GScale(shape, eAnchor);
-                    }
-                    this.transformer.start(x, y);
+
+            GShape clickedShape = null;
+            GShape.EAnchor clickedAnchor = null;
+
+            // 1. 역순 탐색 (위에 겹쳐진 도형부터 마우스 클릭을 감지하기 위함)
+            for (int i = shapes.size() - 1; i >= 0; i--) {
+                GShape shape = shapes.get(i);
+                clickedAnchor = shape.onShape(x, y); // 현재 isSelected 상태를 기반으로 클릭 감지
+
+                if (clickedAnchor != null) {
+                    clickedShape = shape; // 클릭된 도형 기억
                     break;
-                    //trainsformer가 null인 경우를 체크해서 해결한다
                 }
             }
+
+            // 2. 이제 모든 도형의 선택 상태를 갱신 (클릭된 도형만 true, 나머진 false)
+            for (GShape shape : shapes) {
+                shape.setSelected(shape == clickedShape);
+            }
+
+            // 3. 클릭된 도형이 있다면 알맞은 Transformer 쥐어주기
+            if (clickedShape != null) {
+                // 수정됨: onShape가 반환하는 eRR을 회전으로 인식하도록 조건 추가!
+                if (clickedAnchor == GShape.EAnchor.eRotate || clickedAnchor == GShape.EAnchor.eRotate) {
+                    this.transformer = new GRotater(clickedShape);
+                } else if (clickedAnchor == GShape.EAnchor.eMove) {
+                    this.transformer = new GTranslator(clickedShape) {};
+                } else {
+                    // eNW, eNN 등 8방향 앵커인 경우 (리사이즈)
+                    this.transformer = new GScale(clickedShape, clickedAnchor);
+                }
+                this.transformer.start(x, y);
+            } else {
+                // 빈 바탕을 클릭한 경우 transformer 비우기
+                this.transformer = null;
+            }
+
         } else {
+            // --- 기존에 도형 새로 그리는 로직 유지 ---
+            for(GShape shape : shapes) {
+                shape.setSelected(false);
+            }
             GShape currentShape = toolBar.getShapeType().getShape();
+            currentShape.setSelected(true);
+
             this.shapes.add(currentShape);
             this.transformer = new GDrawer(currentShape);
             this.transformer.start(x, y);

@@ -20,11 +20,13 @@ public abstract class GShape implements Cloneable{
     protected int x0, y0, x1, y1;
     protected boolean isSelected;
     protected Shape shape;
-    protected AffineTransform affineTransform;
+//    protected AffineTransform affineTransform;
+    protected double angle = 0;
+    protected double rotCx = 0, rotCy = 0;
 
     public GShape() {
         this.isSelected = false;
-        this.affineTransform = new AffineTransform();
+        //this.affineTransform = new AffineTransform();
 
     }
 
@@ -36,20 +38,20 @@ public abstract class GShape implements Cloneable{
                 cloned.shape = (Shape) (((RectangularShape)this.shape).clone());
             }
 
-            cloned.affineTransform = (AffineTransform) this.affineTransform.clone();
+            //cloned.affineTransform = (AffineTransform) this.affineTransform.clone();
             return cloned;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public AffineTransform getAffineTransform() {
+    /*public AffineTransform getAffineTransform() {
         return this.affineTransform;
     }
 
     public void setAffineTransform(AffineTransform affineTransform) {
         this.affineTransform = affineTransform;
-    }
+    }*/
 
     public Shape getShape() {
         return shape;
@@ -64,15 +66,21 @@ public abstract class GShape implements Cloneable{
     }
 
     private Ellipse2D getAnchor(int x, int y) {
+        //타원 생성 - 타원의 좌표와 크기를 float(32bit)로 저장
         return new Ellipse2D.Float(x-ANCHOR_WIDTH/2, y-ANCHOR_HEIGHT/2, ANCHOR_WIDTH, ANCHOR_HEIGHT);
     }
     public EAnchor onShape(int x, int y) {
-        Point p = new Point(x, y);
+        double cos = Math.cos(-this.angle);
+        double sin = Math.sin(-this.angle);
+        double rx = this.rotCx + (x - this.rotCx) * cos - (y - this.rotCy) * sin;
+        double ry = this.rotCy + (x - this.rotCx) * sin + (y - this.rotCy) * cos;
+        Point p = new Point((int) Math.round(rx), (int) Math.round(ry));
+        /*Point p = new Point(x, y);
         try {
             this.affineTransform.inverseTransform(p,p);
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();
-        }
+        }*/
 
         if(this.isSelected) {
             Rectangle r = this.shape.getBounds();
@@ -99,11 +107,19 @@ public abstract class GShape implements Cloneable{
         }
     }
     public void draw (Graphics2D g) {
-        Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
+        g.rotate(this.angle, this.rotCx, this.rotCy);
+
+        g.draw(this.shape);
+        if (this.isSelected) {
+            this.drawAnchors(g);
+        }
+
+        g.rotate(-this.angle, this.rotCx, this.rotCy);
+        /*Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
         g.draw(transformedShape);
         if (this.isSelected){
             this.drawAnchors(g);
-        }
+        }*/
     }
     private void drawAnchors(Graphics2D g) {
         Rectangle r = this.shape.getBounds();
@@ -112,22 +128,37 @@ public abstract class GShape implements Cloneable{
         int x = r.x;
         int y = r.y;
 
+        //draw -> fill (채워진 원)
+        //getAnchor() - 타원 생성 / affineTransform : 도형 본인의 변환 정보
+        // createTransformedShape = 변환 정보를 매개변수에 적용 -> 적용된 Shape 객체 반환
+        g.fill(getAnchor(x, y));
+        g.fill(getAnchor(x + w / 2, y));
+        g.fill(getAnchor(x + w, y));
+        g.fill(getAnchor(x + w, y + h / 2));
+        g.fill(getAnchor(x + w, y + h));
+        g.fill(getAnchor(x + w / 2, y + h));
+        g.fill(getAnchor(x, y + h));
+        g.fill(getAnchor(x, y + h / 2));
+        g.fill(getAnchor(x + w / 2, y - 30));
 
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x,y)));
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y)));
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x+w,y)));
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x+w,y+h/2)));
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x+w,y+h)));
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y+h)));
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x,y+h)));
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x,y+h/2)));
-        g.draw(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y-30)));
+/*        g.fill(this.affineTransform.createTransformedShape(getAnchor(x,y)));
+        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y)));
+        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w,y)));
+        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w,y+h/2)));
+        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w,y+h)));
+        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y+h)));
+        g.fill(this.affineTransform.createTransformedShape(getAnchor(x,y+h)));
+        g.fill(this.affineTransform.createTransformedShape(getAnchor(x,y+h/2)));
+        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y-30)));*/
     }
 
     public void addPoint(int x, int y ) {}
     public void setLocation0(int x, int y) {}
     public void setLocation1(int x, int y) { }
     public void translate(int dx, int dy){}
+    public void scale(double sx, double sy, double tx, double ty){}
+    public void rotate(double dAngle, double cx, double cy){}
+
 
     public void setSize(int width, int height){
         this.x1=x0+width;

@@ -8,7 +8,7 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 public class GScale extends GTransformer{
-    private Point2D px;
+    private int x0, y0;
     private GShape.EAnchor eAnchor;
 
     public GScale(GShape shape, GShape.EAnchor eAnchor) {
@@ -18,32 +18,25 @@ public class GScale extends GTransformer{
 
     @Override
     public void start(int x, int y) {
-        this.px = new Point2D.Double(x,y);
+        this.x0 = x;
+        this.y0 = y;
     }
 
     @Override
     public void keep(int x, int y) {
-        Point2D pCurrent = new Point2D.Double(x,y);
+        int dx = x - this.x0;
+        int dy = y - this.y0;
+
         Rectangle r = shape.getShape().getBounds();
         double w = r.getWidth();
         double h = r.getHeight();
 
+        if (w == 0) w = 1;
+        if (h == 0) h = 1;
+
         double sx = 1.0;
         double sy = 1.0;
-        double tx = 0, ty = 0;
-
-        //역변환을 통해 원래 좌표계에서의 변화량 구하기
-        Point2D p0 = new Point2D.Double();
-        Point2D p1 = new Point2D.Double();
-
-        try {
-            shape.getAffineTransform().inverseTransform(px, p0);
-            shape.getAffineTransform().inverseTransform(pCurrent, p1);
-        } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }
-        double dx = p1.getX()-p0.getX();
-        double dy = p1.getY()-p0.getY();
+        double tx = r.getCenterX(); double ty = r.getCenterY();
 
         switch (eAnchor) {
             case eEE:
@@ -60,7 +53,7 @@ public class GScale extends GTransformer{
                 break;
             case eNN:
                 sy = (h-dy) /h;
-                ty = r.getY();
+                ty = r.getY() + h;
                 break;
             case eSE:
                 sx = (w + dx) /w;
@@ -87,13 +80,29 @@ public class GScale extends GTransformer{
                 ty = r.getY();
                 break;
         }
-        if (sx > 0 && sy > 0) {
-            AffineTransform at = shape.getAffineTransform();
-            at.translate(tx, ty);
-            at.scale(sx, sy);
-            at.translate(-tx, -ty);
+        if (Math.abs(w * sx) < 1.0 || Math.abs(h * sy) < 1.0) {
+            return;
         }
-        this.px=pCurrent;
+        shape.scale(sx, sy, tx, ty);
+        if (sx < 0) {
+            if (eAnchor == GShape.EAnchor.eEE) eAnchor = GShape.EAnchor.eWW;
+            else if (eAnchor == GShape.EAnchor.eWW) eAnchor = GShape.EAnchor.eEE;
+            else if (eAnchor == GShape.EAnchor.eSE) eAnchor = GShape.EAnchor.eSW;
+            else if (eAnchor == GShape.EAnchor.eSW) eAnchor = GShape.EAnchor.eSE;
+            else if (eAnchor == GShape.EAnchor.eNE) eAnchor = GShape.EAnchor.eNW;
+            else if (eAnchor == GShape.EAnchor.eNW) eAnchor = GShape.EAnchor.eNE;
+        }
+        if (sy < 0) {
+            if (eAnchor == GShape.EAnchor.eNN) eAnchor = GShape.EAnchor.eSS;
+            else if (eAnchor == GShape.EAnchor.eSS) eAnchor = GShape.EAnchor.eNN;
+            else if (eAnchor == GShape.EAnchor.eNE) eAnchor = GShape.EAnchor.eSE;
+            else if (eAnchor == GShape.EAnchor.eSE) eAnchor = GShape.EAnchor.eNE;
+            else if (eAnchor == GShape.EAnchor.eNW) eAnchor = GShape.EAnchor.eSW;
+            else if (eAnchor == GShape.EAnchor.eSW) eAnchor = GShape.EAnchor.eNW;
+        }
+
+        this.x0 = x;
+        this.y0 = y;
 
     }
 

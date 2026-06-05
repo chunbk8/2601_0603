@@ -7,7 +7,7 @@ import java.awt.geom.AffineTransform;
 
 public class GRotater extends GTransformer{
     private double startAngle;
-    private Point center;
+    private double cx, cy;
 
     public GRotater(GShape shape) {
         super(shape);
@@ -15,18 +15,21 @@ public class GRotater extends GTransformer{
 
     @Override
     public void start(int x, int y) {
-        Rectangle r = shape.getAffineTransform().createTransformedShape(shape.getShape()).getBounds();
-        this.center = new Point((int)r.getCenterX(), (int)r.getCenterY());
-        this.startAngle = Math.atan2(y-center.y, x- center.x);
+        Rectangle r = shape.getShape().getBounds();
+        this.cx = r.getCenterX();
+        this.cy = r.getCenterY();
+        this.startAngle = Math.atan2(y - cy, x - cx); // 최초 클릭 위치의 각도
     }
 
     @Override
     public void keep(int x, int y) {
-        double currentAngle = Math.atan2(y-center.y, x-center.x);
-        double dAngle = currentAngle = startAngle;
-        AffineTransform af = shape.getAffineTransform();
-        af.rotate(dAngle, center.x,center.y);
+        double currentAngle = Math.atan2(y - cy, x - cx);
+        double dAngle = currentAngle - this.startAngle; // 움직인 만큼의 각도 차이
 
+        // 1. 도형에게 이 각도만큼 돌아가라고 명령!
+        shape.rotate(dAngle, cx, cy);
+
+        // 2. 다음번 계산을 위해 현재 각도로 갱신
         this.startAngle = currentAngle;
 
     }

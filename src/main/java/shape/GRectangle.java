@@ -14,19 +14,48 @@ public class GRectangle extends GShape{
     public void setLocation0(int x, int y) {
         Rectangle r = (Rectangle) shape;
         r.setFrame(x,y,0,0);
+        this.x0=x;
+        this.y0=y;
     }
 
     public void setLocation1(int x, int y) {
         Rectangle r = (Rectangle) shape;
-        double w = x-r.getX(); //현재의 점에서 원점을 뺀 것
-        double h = y-r.getY();
-        r.setFrame(r.getX(),r.getY(),w,h);
+        int newX = Math.min(this.x0, x);
+        int newY = Math.min(this.y0, y);
+        int w = Math.abs(x - this.x0);
+        int h = Math.abs(y - this.y0);
+
+        r.setFrame(newX, newY, w, h);
     }
 
     public void translate(int dx, int dy) {
         Rectangle r = (Rectangle) shape;
         r.setFrame(r.getX()+dx, r.getY()+dy, r.getWidth(), r.getHeight());
+        this.rotCx += dx;
+        this.rotCy += dy;
+    }
+    @Override
+    public void scale(double sx, double sy, double tx, double ty) {
+        Rectangle r = (Rectangle) shape; // GOval은 Ellipse2D로 캐스팅
 
+        // 기준점(tx, ty)에서 떨어진 거리만큼 배율(sx, sy)을 곱해줍니다.
+        double newX1 = tx + (r.getX() - tx) * sx;
+        double newY1 = ty + (r.getY() - ty) * sy;
+        double newX2 = tx + (r.getX() + r.getWidth() - tx) * sx;
+        double newY2 = ty + (r.getY() + r.getHeight() - ty) * sy;
+
+        // 드래그로 뒤집히는 것 방지 및 좌표 갱신
+        r.setFrame(
+                Math.min(newX1, newX2), Math.min(newY1, newY2),
+                Math.abs(newX2 - newX1), Math.abs(newY2 - newY1)
+        );
+    }
+    @Override
+    public void rotate(double dAngle, double cx, double cy) {
+        // 네모와 타원은 내부 좌표를 직접 기울일 수 없으므로, 각도만 기록합니다.
+        this.angle += dAngle;
+        this.rotCx = cx;
+        this.rotCy = cy;
     }
 
 }

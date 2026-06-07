@@ -16,6 +16,7 @@ public class GFileMenu extends JMenu {
     private JMenuItem openItem;
     private JMenuItem saveItem;
     private JMenuItem exportItem;
+    private JMenuItem insertImageItem;
     private JFileChooser fileChooser;
 
     //association
@@ -44,6 +45,10 @@ public class GFileMenu extends JMenu {
         exportItem.setActionCommand("Export");        // 🌟 이름표
         exportItem.addActionListener(actionHandler);  // 🌟 핸들러 부착
         this.add(exportItem);
+        insertImageItem = new JMenuItem("이미지 삽입");
+        insertImageItem.setActionCommand("InsertImage");
+        insertImageItem.addActionListener(actionHandler);
+        this.add(insertImageItem);
     }
 
     public void associateWith(GDrawingPanel drawingPanel) {
@@ -144,6 +149,22 @@ public class GFileMenu extends JMenu {
             JOptionPane.showMessageDialog(null, "멋진 그림이 PNG로 저장되었습니다!", "내보내기 완료", JOptionPane.INFORMATION_MESSAGE);
         }
     }
+
+    private void insertImage() {
+        if (drawingPanel == null) return;
+
+        // 이미지 파일 필터 적용 (옵션)
+        // fileChooser.setFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "gif"));
+
+        int returnVal = fileChooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            if (file != null) {
+                // 패널에 해당 파일 경로를 전달하여 이미지 도형 생성
+                drawingPanel.addImageShape(file.getAbsolutePath());
+            }
+        }
+    }
     private class FileActionHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -159,6 +180,8 @@ public class GFileMenu extends JMenu {
                 save();
             } else if (command.equals("Export")) {
                 export();
+            } else if (command.equals("InsertImage")) { // 🌟 핸들러 분기 추가
+                insertImage();
             }
         }
     }

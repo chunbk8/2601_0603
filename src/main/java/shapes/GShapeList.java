@@ -1,6 +1,7 @@
 package shapes;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Vector;
 
 public class GShapeList implements Serializable {
@@ -12,10 +13,21 @@ public class GShapeList implements Serializable {
     }
 
     // 🌟 캡슐화: 데이터에 접근하는 통로를 메서드로 제공
-    public void add(GShape shape) { shapes.add(shape); }
-    public void remove(GShape shape) { shapes.remove(shape); }
-    public void clear() { shapes.clear(); }
-    public Vector<GShape> getShapes() { return shapes; }
+    public void add(GShape shape) {
+        shapes.add(shape);
+    }
+
+    public void remove(GShape shape) {
+        shapes.remove(shape);
+    }
+
+    public void clear() {
+        shapes.clear();
+    }
+
+    public Vector<GShape> getShapes() {
+        return shapes;
+    }
 
     // 🌟 Z-Order 및 순회 로직도 여기서 관리
     public void moveToFront(GShape shape) {
@@ -23,6 +35,7 @@ public class GShapeList implements Serializable {
             shapes.add(shape);      // 맨 뒤에 추가 (그리기 순서상 맨 앞)
         }
     }
+
     public void bringSelectedToFront() {
         for (GShape shape : this.shapes) {
             if (shape.isSelected()) {
@@ -55,13 +68,38 @@ public class GShapeList implements Serializable {
             shape.draw(g2d);
         }
     }
+
     public void setShapes(Vector<GShape> loadedShapes) {
         this.shapes.clear();
         this.shapes.addAll(loadedShapes);
     }
 
+    public void deleteSelected() {
+        Iterator<GShape> iter = shapes.iterator();
+        while (iter.hasNext()) {
+            if (iter.next().isSelected()) iter.remove();
+        }
+    }
+
+    public void copyTo(GShapeList clipboard) {
+        clipboard.clear();
+        for (GShape shape : shapes) {
+            if (shape.isSelected()) {
+                clipboard.add(shape.clone());
+            }
+        }
+    }
+
+    public void pasteFrom(GShapeList clipboard, int offset) {
+        for (GShape shape : shapes) shape.setSelected(false);
+
+        for (GShape clipShape : clipboard.getShapes()) {
+            GShape newShape = clipShape.clone();
+            newShape.translate(offset, offset);
+            newShape.setSelected(true);
+            this.shapes.add(newShape);
+        }
 
 
-
-
+    }
 }

@@ -21,7 +21,8 @@ public class GConstants {
         eOval("동그라미", new GOval(), EDrawingType.e2Point),
         eLine("라인", new GLine(), EDrawingType.e2Point),
         ePolygon("폴리곤", new GPolygon(), EDrawingType.eNPoint),
-        ePen("펜", new GPen(), EDrawingType.e2Point);
+        ePen("펜", new GPen(), EDrawingType.e2Point),
+        eText("텍스트", new GText(), EDrawingType.e2Point);
 
 
         private final String name;

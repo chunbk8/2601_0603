@@ -7,10 +7,12 @@ import shapes.GShapeList;
 import transformer.*;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
+import shapes.GText;
 
 public class GDrawingPanel extends JPanel {
 
@@ -22,9 +24,11 @@ public class GDrawingPanel extends JPanel {
 
     //attributes
     private EDrawingState eDrawingState;
+    private int pasteOffset = 20;
 
     //components
     private final GShapeList shapes;
+    private final GShapeList clipboard;
     private final GDrawingState drawingState;
     private BufferedImage bufferImage;
     private GTransformer transformer;
@@ -44,19 +48,24 @@ public class GDrawingPanel extends JPanel {
         this.setBackground(Color.WHITE);
         this.eDrawingState = EDrawingState.eIdle;
         this.setLayout(null);
+        this.setFocusable(true);
 
 
         //components list
         this.shapes = new GShapeList();
+        this.clipboard = new GShapeList();
         this.drawingState = new GDrawingState();
+        this.popupMenu = new GPopupMenu();
         this.bufferImage = null;
         this.transformer = null;
 
         MouseHandler mouseHandler = new MouseHandler();
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
+        KeyHandler keyHandler = new KeyHandler();
+        this.addKeyListener(keyHandler);
 
-        initPopupMenu();
+        this.popupMenu.associateWith(this);
     }
 
     //setters and getters
@@ -196,6 +205,7 @@ public class GDrawingPanel extends JPanel {
                 drawingState.setLineColor(clickedShape.getLineColor());
                 drawingState.setFillColor(clickedShape.getFillColor());
                 drawingState.setThickness(clickedShape.getThickness());
+                drawingState.setTextColor(clickedShape.getTextColor());
 
                 if (this.colorBar != null) {
                     this.colorBar.updateUIFromState();
@@ -219,6 +229,7 @@ public class GDrawingPanel extends JPanel {
             if (this.colorBar != null) {
                 currentShape.setLineColor(drawingState.getLineColor());
                 currentShape.setFillColor(drawingState.getFillColor());
+                currentShape.setTextColor(drawingState.getTextColor());
             }
             if (this.styleToolBar != null) {
                 currentShape.setThickness(drawingState.getThickness());
@@ -268,11 +279,6 @@ public class GDrawingPanel extends JPanel {
         return null; // 클릭한 곳에 도형이 없으면 null 반환
     }
 
-    // 🌟 팝업 메뉴를 만들고 버튼 이벤트를 연결하는 메서드
-    private void initPopupMenu() {
-        this.popupMenu = new GPopupMenu();
-        this.popupMenu.associateWith(this);
-    }
 
     // 🌟 선택된 도형을 리스트 맨 뒤로(화면 맨 앞으로) 보내는 로직
     public void bringToFront() {
@@ -286,6 +292,85 @@ public class GDrawingPanel extends JPanel {
         drawAllShapes();
     }
 
+    // GDrawingPanel.java 내부에 추가
+    public void addImageShape(String filePath) {
+        // 이미지를 (50, 50) 좌표에 생성
+        shapes.GImage newImage = new shapes.GImage(filePath, 50, 50);
+
+        // 새로 추가된 이미지 자동 선택 처리
+        for (shapes.GShape shape : shapes.getShapes()) {
+            shape.setSelected(false);
+        }
+        newImage.setSelected(true);
+
+        this.shapes.add(newImage); // 리스트에 추가
+        drawAllShapes(); // 화면 다시 그리기
+    }
+    public void deleteSelectedShapes() {
+        this.shapes.deleteSelected();
+        drawAllShapes();
+    }
+
+    public void copySelectedShapes() {
+        this.shapes.copyTo(clipboard);
+        this.pasteOffset = 20;
+    }
+
+    public void pasteShapes() {
+        this.shapes.pasteFrom(clipboard, pasteOffset);
+        this.pasteOffset += 20;
+        drawAllShapes();
+    }
+
+    public void cutSelectedShapes() {
+        copySelectedShapes();
+        deleteSelectedShapes();
+    }
+
+    public void duplicateSelectedShapes() {
+        copySelectedShapes();
+        pasteShapes();
+    }
+
+    private class KeyHandler extends KeyAdapter {
+        @Override
+        public void keyPressed(java.awt.event.KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            boolean isCtrl = e.isControlDown() || e.isMetaDown();
+            // Delete 키나 Backspace 키가 눌렸을 때 삭제 메서드 실행
+            if (e.getKeyCode() == java.awt.event.KeyEvent.VK_DELETE) {
+                deleteSelectedShapes();
+            } else if (isCtrl) {
+                if (keyCode == KeyEvent.VK_C) copySelectedShapes();
+                else if (keyCode == KeyEvent.VK_V) pasteShapes();
+                else if (keyCode == KeyEvent.VK_X) cutSelectedShapes();
+                else if (keyCode == KeyEvent.VK_D) duplicateSelectedShapes();
+            }
+        }
+        @Override
+        public void keyTyped(KeyEvent e) {
+            // 현재 선택된 도형들을 검사
+            for (GShape shape : shapes.getShapes()) {
+                // 선택된 도형이 GText 타입일 때만 타이핑 적용
+                if (shape.isSelected() && shape instanceof GText) {
+                    GText textShape = (GText) shape;
+                    char c = e.getKeyChar();
+
+                    if (c == '\b') { // 백스페이스 처리
+                        String t = textShape.getText();
+                        if (!t.isEmpty()) {
+                            textShape.setText(t.substring(0, t.length() - 1));
+                        }
+                    } else if (!Character.isISOControl(c)) { // 일반 문자 입력 처리
+                        textShape.setText(textShape.getText() + c);
+                    }
+
+                    drawAllShapes(); // 화면 갱신
+                    break;
+                }
+            }
+        }
+    }
 
 
     private class MouseHandler implements MouseListener, MouseMotionListener {

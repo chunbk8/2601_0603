@@ -22,7 +22,7 @@ public class GMainFrame extends JFrame {
         //생성자에 속성을 채운다.
         //set attributes
         super("그림판");
-        this.setSize(800, 400);
+        this.setSize(1000, 800);
         this.setLocation(200, 200);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());

@@ -3,6 +3,7 @@ package shapes;
 import global.GConstants;
 
 import java.awt.*;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RectangularShape;
 import java.io.Serializable;
@@ -22,7 +23,8 @@ public abstract class GShape implements Cloneable, Serializable {
     protected boolean isSelected;
     protected Shape shape;
     protected Color lineColor = GConstants.EColor.eBlack.getColor();
-    protected Color fillColor = GConstants.EColor.eTransparent.getColor(); // 🌟 추가//default
+    protected Color fillColor = GConstants.EColor.eTransparent.getColor();
+    protected Color textColor = GConstants.EColor.eBlack.getColor();
 
 
 
@@ -80,6 +82,8 @@ public abstract class GShape implements Cloneable, Serializable {
     public void setFillColor(Color fillColor) {this.fillColor = fillColor; }
     public int getThickness() {return thickness;}
     public void setThickness(int thickness) {this.thickness = thickness;}
+    public Color getTextColor() { return textColor; }
+    public void setTextColor(Color textColor) { this.textColor = textColor; }
 
     protected Ellipse2D getAnchor(int x, int y) {
         //타원 생성 - 타원의 좌표와 크기를 float(32bit)로 저장
@@ -154,7 +158,9 @@ public abstract class GShape implements Cloneable, Serializable {
         int h = r.height;
         int x = r.x;
         int y = r.y;
-
+        g.setStroke(new BasicStroke(1.0f)); // 1픽셀 두께의 실선
+        g.setColor(Color.LIGHT_GRAY);       // 은은한 회색 윤곽선
+        g.drawRect(x, y, w, h);     // 앵커 알맹이를 그리기 전에 원래 펜 설정으로 복구
         //draw -> fill (채워진 원)
         //getAnchor() - 타원 생성 / affineTransform : 도형 본인의 변환 정보
         // createTransformedShape = 변환 정보를 매개변수에 적용 -> 적용된 Shape 객체 반환
@@ -186,11 +192,6 @@ public abstract class GShape implements Cloneable, Serializable {
     public void scale(double sx, double sy, double tx, double ty){}
     public void rotate(double dAngle, double cx, double cy){}
 
-
-    public void setSize(int width, int height){
-        this.x1=x0+width;
-        this.y1=y0+height;
-    }
 
   /*  private class Anchors {
         public int w = 15;

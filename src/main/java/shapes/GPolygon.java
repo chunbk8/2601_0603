@@ -1,4 +1,4 @@
-package shape;
+package shapes;
 
 import java.awt.*;
 import java.util.Arrays;

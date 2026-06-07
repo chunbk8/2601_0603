@@ -1,7 +1,7 @@
 package menu;
 
 import frames.GDrawingPanel;
-import shape.GShape;
+import shapes.GShape;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

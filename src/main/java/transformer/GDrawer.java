@@ -1,8 +1,6 @@
 package transformer;
 
-import shape.GShape;
-
-import java.awt.*;
+import shapes.GShape;
 
 public class GDrawer extends GTransformer {
     public GDrawer(GShape shape){

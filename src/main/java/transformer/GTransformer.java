@@ -1,8 +1,6 @@
 package transformer;
 
-import shape.GShape;
-
-import java.awt.*;
+import shapes.GShape;
 
 public abstract class GTransformer {
     protected GShape shape;

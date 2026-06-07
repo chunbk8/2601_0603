@@ -1,11 +1,9 @@
-package shape;
+package shapes;
 
 import global.GConstants;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.RectangularShape;
 import java.io.Serializable;
 
@@ -69,6 +67,12 @@ public abstract class GShape implements Cloneable, Serializable {
 
     public boolean isEditable() {return false;}
     public boolean isSelected() {return isSelected;}
+
+    public void setStyle(Color lineColor, Color fillColor, int thickness){
+        this.lineColor=lineColor;
+        this.fillColor=fillColor;
+        this.thickness=thickness;
+    }
     public void setSelected(boolean selected) {isSelected = selected;}
     public Color getLineColor() {return lineColor;}
     public void setLineColor(Color lineColor) {this.lineColor = lineColor;}

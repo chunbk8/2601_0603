@@ -1,94 +1,77 @@
 package frames;
 
+import shapes.GDrawingState;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GStyleToolBar extends JToolBar {
-    private int penWidth = 1;
     private final int MIN_WIDTH = 1;
     private final int MAX_WIDTH = 50;
 
     private JTextField txtValue;
     private GDrawingPanel drawingPanel;
+    private GDrawingState drawingState; // 이제 이 친구가 진실의 원천입니다!
 
     public GStyleToolBar() {
-
-
-        // 현재 값을 보여줄 텍스트 필드 (수정 불가하게 설정)
-        txtValue = new JTextField(String.valueOf(penWidth), 3);
+        // 초기값은 1로 시작
+        txtValue = new JTextField("1", 3);
         txtValue.setHorizontalAlignment(JTextField.CENTER);
         txtValue.setEditable(true);
 
-        // 상하 버튼 생성
         JButton btnUp = new JButton("▲");
         JButton btnDown = new JButton("▼");
-        txtValue.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    int val = Integer.parseInt(txtValue.getText());
-                    if (val >= MIN_WIDTH && val <= MAX_WIDTH) {
-                        penWidth = val;
-                        notifyThicknessChange(); // 패널에 전달
-                    } else {
-                        txtValue.setText(String.valueOf(penWidth)); // 범위 초과 시 원상복구
-                    }
-                } catch (NumberFormatException ex) {
-                    txtValue.setText(String.valueOf(penWidth)); // 숫자 아닐 시 원상복구
+
+        // 입력값 변경 로직
+        txtValue.addActionListener(e -> {
+            try {
+                int val = Integer.parseInt(txtValue.getText());
+                if (val >= MIN_WIDTH && val <= MAX_WIDTH) {
+                    updateThickness(val);
+                } else {
+                    txtValue.setText(String.valueOf(drawingState.getThickness()));
                 }
-            }
-        });
-        // 위 버튼 클릭 이벤트
-        btnUp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (penWidth < MAX_WIDTH) {
-                    penWidth++;
-                    txtValue.setText(String.valueOf(penWidth));
-                    notifyThicknessChange();
-                }
+            } catch (NumberFormatException ex) {
+                txtValue.setText(String.valueOf(drawingState.getThickness()));
             }
         });
 
-        // 아래 버튼 클릭 이벤트
-        btnDown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (penWidth > MIN_WIDTH) {
-                    penWidth--;
-                    txtValue.setText(String.valueOf(penWidth));
-                    notifyThicknessChange();
-                }
-            }
+        btnUp.addActionListener(e -> {
+            int current = drawingState.getThickness();
+            if (current < MAX_WIDTH) updateThickness(current + 1);
         });
 
-        // 컴포넌트 배치
+        btnDown.addActionListener(e -> {
+            int current = drawingState.getThickness();
+            if (current > MIN_WIDTH) updateThickness(current - 1);
+        });
+
         add(new JLabel("펜 굵기: "));
         add(txtValue);
         add(btnUp);
         add(btnDown);
-
-        setVisible(true);
-    }
-    public void associateWith(GDrawingPanel drawingPanel) {
-        this.drawingPanel = drawingPanel;
     }
 
-    public int getPenWidth() { return this.penWidth; }
-
-    // 🌟 이미 그려진 도형을 클릭했을 때, 해당 도형의 굵기로 UI를 맞춰주는 메서드
-    public void setPenWidthUI(int thickness) {
-        this.penWidth = thickness;
-        this.txtValue.setText(String.valueOf(thickness));
-    }
-
-    // 🌟 버튼을 눌러서 굵기가 바뀌면 패널에 선택된 도형의 굵기를 바꾸라고 명령
-    private void notifyThicknessChange() {
-        if (drawingPanel != null) {
-            drawingPanel.changeSelectedShapeThickness(this.penWidth);
+    // 🌟 공통 갱신 로직: 상태 객체 수정 -> 패널 그리기 요청
+    private void updateThickness(int thickness) {
+        if (drawingState != null) {
+            drawingState.setThickness(thickness); // 1. 진실 저장
+            txtValue.setText(String.valueOf(thickness)); // 2. UI 갱신
+            if (drawingPanel != null) {
+                drawingPanel.updateSelectedStyle(); // 3. 패널에게 적용 요청
+            }
         }
     }
 
+    public void associateWith(GDrawingPanel drawingPanel) {
+        this.drawingPanel = drawingPanel;
+        this.drawingState = drawingPanel.getDrawingState();
+        // 🌟 처음 연결될 때, 초기값으로 UI를 맞춤
+        this.txtValue.setText(String.valueOf(drawingState.getThickness()));
+    }
 
+    // 외부에서 속성 변경(예: 도형 클릭 시)이 있을 때 호출
+    public void setPenWidthUI(int thickness) {
+        this.txtValue.setText(String.valueOf(thickness));
+    }
 }

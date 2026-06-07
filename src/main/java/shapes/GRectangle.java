@@ -1,25 +1,24 @@
-package shape;
+package shapes;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 
-public class GOval extends GShape{
+public class GRectangle extends GShape{
 
-    public GOval() {
-        this.shape = new Ellipse2D.Double();
+    public GRectangle() {
+        this.shape = new Rectangle();
 
     }
 
+
     public void setLocation0(int x, int y) {
-        Ellipse2D r = (Ellipse2D) shape;
+        Rectangle r = (Rectangle) shape;
         r.setFrame(x,y,0,0);
-        this.x0 = x;
-        this.y0 = y;
+        this.x0=x;
+        this.y0=y;
     }
 
     public void setLocation1(int x, int y) {
-        Ellipse2D r = (Ellipse2D) shape;
-
+        Rectangle r = (Rectangle) shape;
         int newX = Math.min(this.x0, x);
         int newY = Math.min(this.y0, y);
         int w = Math.abs(x - this.x0);
@@ -29,15 +28,14 @@ public class GOval extends GShape{
     }
 
     public void translate(int dx, int dy) {
-        Ellipse2D r = (Ellipse2D) shape;
+        Rectangle r = (Rectangle) shape;
         r.setFrame(r.getX()+dx, r.getY()+dy, r.getWidth(), r.getHeight());
         this.rotCx += dx;
         this.rotCy += dy;
-
     }
     @Override
     public void scale(double sx, double sy, double tx, double ty) {
-        Ellipse2D r = (Ellipse2D) shape;
+        Rectangle r = (Rectangle) shape; // GOval은 Ellipse2D로 캐스팅
 
         // 기준점(tx, ty)에서 떨어진 거리만큼 배율(sx, sy)을 곱해줍니다.
         double newX1 = tx + (r.getX() - tx) * sx;
@@ -51,14 +49,12 @@ public class GOval extends GShape{
                 Math.abs(newX2 - newX1), Math.abs(newY2 - newY1)
         );
     }
-
     @Override
     public void rotate(double dAngle, double cx, double cy) {
+        // 네모와 타원은 내부 좌표를 직접 기울일 수 없으므로, 각도만 기록합니다.
         this.angle += dAngle;
         this.rotCx = cx;
         this.rotCy = cy;
     }
-
-
 
 }

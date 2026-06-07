@@ -1,8 +1,6 @@
 package transformer;
 
-import shape.GShape;
-
-import java.awt.geom.AffineTransform;
+import shapes.GShape;
 
 
 public class GTranslator extends GTransformer {

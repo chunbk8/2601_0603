@@ -1,7 +1,7 @@
 package global;
 
 
-import shape.*;
+import shapes.*;
 
 import java.awt.*;
 

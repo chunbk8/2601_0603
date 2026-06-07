@@ -1,6 +1,7 @@
 package frames;
 
 import global.GConstants;
+import shapes.GDrawingState;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -12,8 +13,6 @@ public class GColorBar extends JToolBar {
 
     // 현재 선택된 색상 저장 (기본값: 검정)
     private GConstants.EColor eColor;
-    private Color lineColor = eColor.eBlack.getColor();
-    private Color fillColor = eColor.eTransparent.getColor();
     // (이후 구현 예정) 채우기 색상
     // private Color fillColor = Color.WHITE;
 
@@ -23,6 +22,7 @@ public class GColorBar extends JToolBar {
 
     //associations
     private GDrawingPanel drawingPanel;
+    private GDrawingState drawingState;
 
     public GColorBar() {
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 2));
@@ -83,8 +83,6 @@ public class GColorBar extends JToolBar {
         this.add(palettePanel);
 
         // UI 초기화
-        setLineColorUI(this.lineColor);
-        setFillColorUI(this.fillColor);
         updateModeBorders();
 
     }
@@ -103,20 +101,14 @@ public class GColorBar extends JToolBar {
 
     public void associateWith(GDrawingPanel drawingPanel){
         this.drawingPanel = drawingPanel;
+        this.drawingState = drawingPanel.getDrawingState();
+        updateUIFromState();
     }
 
-    // 외부(GDrawingPanel 등)에서 현재 선택된 선 색상을 가져갈 수 있도록 하는 Getter
-    public Color getLineColor() {return this.lineColor;}
-    public Color getFillColor() { return this.fillColor;}
-
-    public void setLineColorUI(Color color) {
-        this.lineColor = color;
-        updateButtonUI(lineButton, color, "선"); // 🌟 lineModeBtn으로 변경
-    }
-
-    public void setFillColorUI(Color color) {
-        this.fillColor = color;
-        updateButtonUI(fillButton, color, "배경"); // 🌟 fillModeBtn으로 변경
+    public void updateUIFromState() {
+        // 1. 상태 객체에서 값을 가져와서 버튼의 색상을 맞춤
+        updateButtonUI(lineButton, drawingState.getLineColor(), "선");
+        updateButtonUI(fillButton, drawingState.getFillColor(), "배경");
     }
 
     // 버튼의 색상과 글자색을 바꿔주는 헬퍼 메서드 (중복 제거용)
@@ -142,17 +134,20 @@ public class GColorBar extends JToolBar {
     private class ColorActionHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Color selectedColor = GConstants.EColor.valueOf(e.getActionCommand()).getColor();
+            Color selectedColor = eColor.valueOf(e.getActionCommand()).getColor();
+
+            // 1. 상태 객체(drawingState)를 통해 값을 먼저 업데이트합니다.
             if (isLineMode) {
-                setLineColorUI(selectedColor);
-                if (drawingPanel != null) {
-                    drawingPanel.changeSelectedShapeLineColor(lineColor);
-                }
+                drawingState.setLineColor(selectedColor); // 상태 객체 반영
             } else {
-                setFillColorUI(selectedColor);
-                if (drawingPanel != null) {
-                    drawingPanel.changeSelectedShapeFillColor(fillColor);
-                }
+                drawingState.setFillColor(selectedColor); // 상태 객체 반영
+            }
+
+            updateUIFromState();
+            // 2. 패널에게 '스타일이 바뀌었으니 다시 적용해줘!'라고 요청 (매개변수 없음!)
+            if (drawingPanel != null) {
+                updateUIFromState();
+                drawingPanel.updateSelectedStyle();
             }
         }
     }

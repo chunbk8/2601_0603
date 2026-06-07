@@ -1,9 +1,8 @@
 package transformer;
 
-import shape.GShape;
+import shapes.GShape;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 public class GRotater extends GTransformer{
     private double startAngle;

@@ -1,11 +1,8 @@
 package transformer;
 
-import shape.GShape;
+import shapes.GShape;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
 
 public class GScale extends GTransformer{
     private int x0, y0;

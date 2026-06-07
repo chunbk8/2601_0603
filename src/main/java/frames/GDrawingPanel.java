@@ -1,7 +1,9 @@
 package frames;
 
 import global.GConstants;
-import shape.GShape;
+import shapes.GDrawingState;
+import shapes.GShape;
+import shapes.GShapeList;
 import transformer.*;
 
 import javax.swing.*;
@@ -22,16 +24,18 @@ public class GDrawingPanel extends JPanel {
     private EDrawingState eDrawingState;
 
     //components
-    private final Vector<GShape> shapes;
+    private final GShapeList shapes;
+    private final GDrawingState drawingState;
     private BufferedImage bufferImage;
     private GTransformer transformer;
-    private JPopupMenu popupMenu;
+    private GPopupMenu popupMenu;
 
     //associations
     private GShapeToolBar toolBar;
     private GStyleToolBar styleToolBar;
     private GColorBar colorBar;
     private GStatusBar statusBar;
+
 
 
     //constructors
@@ -43,7 +47,8 @@ public class GDrawingPanel extends JPanel {
 
 
         //components list
-        this.shapes = new Vector<GShape>();
+        this.shapes = new GShapeList();
+        this.drawingState = new GDrawingState();
         this.bufferImage = null;
         this.transformer = null;
 
@@ -66,13 +71,14 @@ public class GDrawingPanel extends JPanel {
     public void associateWith(GStatusBar statusBar) {
         this.statusBar = statusBar;
     }
-
-    public Vector<GShape> getShapes(){
+    public GShapeList getShapes(){
         return this.shapes;
     }
+    public GDrawingState getDrawingState() {return drawingState;}
     public void setShapes(Vector<GShape> loadedShapes) {
-        this.shapes.clear();
-        this.shapes.addAll(loadedShapes);
+        this.shapes.setShapes(loadedShapes);
+
+        // 2. 화면 갱신을 위한 버퍼 체크 및 그리기
         if (this.getWidth() > 0 && this.getHeight() > 0) {
             if (this.bufferImage == null) {
                 this.bufferImage = new java.awt.image.BufferedImage(
@@ -82,6 +88,8 @@ public class GDrawingPanel extends JPanel {
                 );
             }
         }
+
+        // 3. 화면 다시 그리기
         drawAllShapes();
     }
 
@@ -96,7 +104,7 @@ public class GDrawingPanel extends JPanel {
             g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
 
             // 3. 사진을 찍을 때는 조절점(앵커)이 나오면 안 되므로, 임시로 선택을 해제하고 그립니다.
-            for (shape.GShape shape : this.shapes) {
+            for (shapes.GShape shape : this.shapes.getShapes()) {
                 boolean wasSelected = shape.isSelected(); // 원래 선택 상태 기억
                 shape.setSelected(false); // 찰칵! 하는 순간만 앵커 숨기기
                 shape.draw(g2d);          // 순수 도형만 그리기
@@ -141,44 +149,19 @@ public class GDrawingPanel extends JPanel {
         Graphics2D bufferGraphics = this.bufferImage.createGraphics();
         bufferGraphics.setColor(this.getBackground());
         bufferGraphics.fillRect(0, 0, this.getWidth(), this.getHeight());
-        for (GShape shape : this.shapes) {
-            shape.draw(bufferGraphics);
-        }
+        this.shapes.drawAll(bufferGraphics);
         bufferGraphics.dispose();
         repaint();
     }
-    public void changeSelectedShapeLineColor(Color color) {
-        boolean isChanged = false;
-        for (GShape shape : shapes) {
-            if (shape.isSelected()) {
-                shape.setLineColor(color);
-                isChanged = true;
-            }
-        }
-        if (isChanged) drawAllShapes();
-    }
 
-    // 2. 🌟 배경 색상 변경 메서드 추가
-    public void changeSelectedShapeFillColor(Color color) {
-        boolean isChanged = false;
-        for (GShape shape : shapes) {
+    public void updateSelectedStyle() {
+        GDrawingState state = this.drawingState; // 공유된 객체에서 값을 읽음
+        for (GShape shape : shapes.getShapes()) {
             if (shape.isSelected()) {
-                shape.setFillColor(color);
-                isChanged = true;
+                shape.setStyle(state.getLineColor(), state.getFillColor(), state.getThickness());
             }
         }
-        if (isChanged) drawAllShapes();
-    }
-
-    public void changeSelectedShapeThickness(int thickness) {
-        boolean isChanged = false;
-        for (GShape shape : shapes) {
-            if (shape.isSelected()) {
-                shape.setThickness(thickness);
-                isChanged = true;
-            }
-        }
-        if (isChanged) drawAllShapes();
+        drawAllShapes();
     }
 
     private void startTransform(int x, int y) {
@@ -188,12 +171,13 @@ public class GDrawingPanel extends JPanel {
             GShape clickedShape = onShape(x,y);
             GShape.EAnchor clickedAnchor = null;
             if (clickedShape != null) {
-                clickedAnchor = clickedShape.onShape(x,y); // 클릭된 도형 기억
+                clickedAnchor = clickedShape.onShape(x,y);
+                // 클릭된 도형 기억
             }
 
 
             // 2. 이제 모든 도형의 선택 상태를 갱신 (클릭된 도형만 true, 나머진 false)
-            for (GShape shape : shapes) {
+            for (GShape shape : shapes.getShapes()) {
                 shape.setSelected(shape == clickedShape);
             }
 
@@ -208,9 +192,13 @@ public class GDrawingPanel extends JPanel {
                     this.transformer = new GScale(clickedShape, clickedAnchor);
                 }
                 this.transformer.start(x, y);
+
+                drawingState.setLineColor(clickedShape.getLineColor());
+                drawingState.setFillColor(clickedShape.getFillColor());
+                drawingState.setThickness(clickedShape.getThickness());
+
                 if (this.colorBar != null) {
-                    this.colorBar.setLineColorUI(clickedShape.getLineColor());
-                    this.colorBar.setFillColorUI(clickedShape.getFillColor());
+                    this.colorBar.updateUIFromState();
                 }
                 if (this.styleToolBar != null) {
                     this.styleToolBar.setPenWidthUI(clickedShape.getThickness());
@@ -222,18 +210,18 @@ public class GDrawingPanel extends JPanel {
 
         } else {
             // --- 기존에 도형 새로 그리는 로직 유지 ---
-            for(GShape shape : shapes) {
+            for(GShape shape : shapes.getShapes()) {
                 shape.setSelected(false);
             }
             GShape currentShape = toolBar.getShapeType().getShape();
             currentShape.setSelected(false);
 
             if (this.colorBar != null) {
-                currentShape.setLineColor(this.colorBar.getLineColor());
-                currentShape.setFillColor(this.colorBar.getFillColor());
+                currentShape.setLineColor(drawingState.getLineColor());
+                currentShape.setFillColor(drawingState.getFillColor());
             }
             if (this.styleToolBar != null) {
-                currentShape.setThickness(this.styleToolBar.getPenWidth());
+                currentShape.setThickness(drawingState.getThickness());
             }
             this.shapes.add(currentShape);
             this.transformer = new GDrawer(currentShape);
@@ -271,8 +259,8 @@ public class GDrawingPanel extends JPanel {
 
     private GShape onShape(int x, int y) {
         // 나중에 그린 도형(맨 위)부터 역순으로 클릭을 검사합니다.
-        for (int i = shapes.size() - 1; i >= 0; i--) {
-            GShape shape = shapes.get(i);
+        for (int i = shapes.getShapes().size() - 1; i >= 0; i--) {
+            GShape shape = shapes.getShapes().get(i);
             if (shape.onShape(x, y) != null) {
                 return shape;
             }
@@ -282,43 +270,20 @@ public class GDrawingPanel extends JPanel {
 
     // 🌟 팝업 메뉴를 만들고 버튼 이벤트를 연결하는 메서드
     private void initPopupMenu() {
-        popupMenu = new javax.swing.JPopupMenu();
-        javax.swing.JMenuItem bringToFrontItem = new javax.swing.JMenuItem("맨 앞으로 가져오기");
-        javax.swing.JMenuItem sendToBackItem = new javax.swing.JMenuItem("맨 뒤로 보내기");
-
-        // '맨 앞으로 가져오기' 클릭 시
-        bringToFrontItem.addActionListener(e -> bringSelectedShapeToFront());
-        // '맨 뒤로 보내기' 클릭 시
-        sendToBackItem.addActionListener(e -> sendSelectedShapeToBack());
-
-        popupMenu.add(bringToFrontItem);
-        popupMenu.add(sendToBackItem);
+        this.popupMenu = new GPopupMenu();
+        this.popupMenu.associateWith(this);
     }
 
     // 🌟 선택된 도형을 리스트 맨 뒤로(화면 맨 앞으로) 보내는 로직
-    private void bringSelectedShapeToFront() {
-        for (int i = 0; i < shapes.size(); i++) {
-            GShape shape = shapes.get(i);
-            if (shape.isSelected()) {
-                shapes.remove(i);       // 현재 위치에서 뽑아내서
-                shapes.add(shape);      // 리스트의 맨 끝으로 삽입! (제일 나중에 그려짐 = 맨 앞)
-                drawAllShapes();        // 화면 갱신
-                return;
-            }
-        }
+    public void bringToFront() {
+        this.shapes.bringSelectedToFront(); // 모델에게 명령만 내림
+        drawAllShapes();
     }
 
     // 🌟 선택된 도형을 리스트 맨 앞으로(화면 맨 뒤로) 보내는 로직
-    private void sendSelectedShapeToBack() {
-        for (int i = 0; i < shapes.size(); i++) {
-            GShape shape = shapes.get(i);
-            if (shape.isSelected()) {
-                shapes.remove(i);       // 현재 위치에서 뽑아내서
-                shapes.add(0, shape);   // 리스트의 0번 인덱스(맨 앞)에 삽입! (제일 먼저 그려짐 = 맨 뒤)
-                drawAllShapes();        // 화면 갱신
-                return;
-            }
-        }
+    public void sendToBack() {
+        this.shapes.sendSelectedToBack();
+        drawAllShapes();
     }
 
 
@@ -396,7 +361,7 @@ public class GDrawingPanel extends JPanel {
 
             if (clickedShape != null) {
                 // 기존 선택 해제 및 우클릭한 도형만 선택
-                for (GShape shape : shapes) {
+                for (GShape shape : shapes.getShapes()) {
                     shape.setSelected(false);
                 }
                 clickedShape.setSelected(true);

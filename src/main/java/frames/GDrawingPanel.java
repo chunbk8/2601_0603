@@ -31,6 +31,7 @@ public class GDrawingPanel extends JPanel {
     //associations
     private GShapeToolBar toolBar;
     private GStyleToolBar styleToolBar;
+    private GColorBar colorBar;
 
 
     //constructors
@@ -52,11 +53,12 @@ public class GDrawingPanel extends JPanel {
 
     //setters and getters
         //association을 부를 때 메서드를 통해 불러야 함
-    public void associateWith(GShapeToolBar toolBar) {
-        this.toolBar = toolBar;
-    }
-    public void associateWith(GStyleToolBar styleToolBar) {
-        this.styleToolBar = styleToolBar;
+    // GDrawingPanel.java 에서
+    public void associateWith(GToolPanel toolPanel) {
+        // 상자를 받아서 필요한 부품을 스스로 꺼내 씁니다.
+        this.toolBar = toolPanel.getToolBar();
+        this.styleToolBar = toolPanel.getStyleToolBar();
+        this.colorBar = toolPanel.getColorBar();
     }
 
     @Override
@@ -73,19 +75,47 @@ public class GDrawingPanel extends JPanel {
         if (getWidth() <= 0 || getHeight() <= 0 ) {
             return;
         }
-
         if (bufferImage == null
                 || bufferImage.getWidth() != getWidth()
                 || bufferImage.getHeight() != getHeight()) {
             bufferImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D bufferGraphics = bufferImage.createGraphics();
-            bufferGraphics.setColor(getBackground());
-            bufferGraphics.fillRect(0, 0, getWidth(), getHeight());
-            bufferGraphics.dispose();
+            drawAllShapes();
         }
+    }
 
+    private void drawAllShapes() {
+        // 창이 아직 안 떠서 버퍼가 없을 때를 대비한 방어 코드
+        if (this.bufferImage == null) return;
+        Graphics2D bufferGraphics = this.bufferImage.createGraphics();
+        bufferGraphics.setColor(this.getBackground());
+        bufferGraphics.fillRect(0, 0, this.getWidth(), this.getHeight());
+        for (GShape shape : this.shapes) {
+            shape.draw(bufferGraphics);
+        }
+        bufferGraphics.dispose();
+        repaint();
+    }
+    public void changeSelectedShapeLineColor(Color color) {
+        boolean isChanged = false;
+        for (GShape shape : shapes) {
+            if (shape.isSelected()) {
+                shape.setLineColor(color);
+                isChanged = true;
+            }
+        }
+        if (isChanged) drawAllShapes();
+    }
 
-
+    // 2. 🌟 배경 색상 변경 메서드 추가
+    public void changeSelectedShapeFillColor(Color color) {
+        boolean isChanged = false;
+        for (GShape shape : shapes) {
+            if (shape.isSelected()) {
+                shape.setFillColor(color);
+                isChanged = true;
+            }
+        }
+        if (isChanged) drawAllShapes();
     }
 
     private void startTransform(int x, int y) {
@@ -122,6 +152,10 @@ public class GDrawingPanel extends JPanel {
                     this.transformer = new GScale(clickedShape, clickedAnchor);
                 }
                 this.transformer.start(x, y);
+                if (this.colorBar != null) {
+                    this.colorBar.setLineColorUI(clickedShape.getLineColor());
+                    this.colorBar.setFillColorUI(clickedShape.getFillColor());
+                }
             } else {
                 // 빈 바탕을 클릭한 경우 transformer 비우기
                 this.transformer = null;
@@ -135,6 +169,11 @@ public class GDrawingPanel extends JPanel {
             GShape currentShape = toolBar.getShapeType().getShape();
             currentShape.setSelected(false);
 
+            if (this.colorBar != null) {
+                currentShape.setLineColor(this.colorBar.getLineColor());
+                currentShape.setFillColor(this.colorBar.getFillColor());
+            }
+
             this.shapes.add(currentShape);
             this.transformer = new GDrawer(currentShape);
             this.transformer.start(x, y);
@@ -144,21 +183,10 @@ public class GDrawingPanel extends JPanel {
     }
 
     private void keepTransform(int x, int y) {
-        Graphics2D bufferGraphics = this.bufferImage.createGraphics();
-        bufferGraphics.setColor(this.getBackground());
-        bufferGraphics.fillRect(0, 0, this.getWidth(), this.getHeight());
-        bufferGraphics.setColor(Color.BLACK);
-
         if (this.transformer != null) {
             this.transformer.keep(x, y);
         }
-
-        for (GShape shape : this.shapes) {
-            shape.draw(bufferGraphics);
-        }
-
-        bufferGraphics.dispose();
-        repaint();
+        drawAllShapes();
 
     }
 

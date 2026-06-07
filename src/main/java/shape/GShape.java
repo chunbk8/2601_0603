@@ -1,5 +1,7 @@
 package shape;
 
+import global.GConstants;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -11,8 +13,7 @@ public abstract class GShape implements Cloneable{
     public enum EAnchor {
         eNW, eNN, eNE, eEE, eSE, eSS, eSW, eWW,
         eRotate,
-        eMove,
-        eResize
+        eMove
     }
 
     protected final float ANCHOR_WIDTH = 10;
@@ -20,6 +21,9 @@ public abstract class GShape implements Cloneable{
     protected int x0, y0, x1, y1;
     protected boolean isSelected;
     protected Shape shape;
+    protected Color lineColor = GConstants.EColor.eBlack.getColor();
+    protected Color fillColor = GConstants.EColor.eTransparent.getColor(); // 🌟 추가//default
+
 //    protected AffineTransform affineTransform;
     protected double angle = 0;
     protected double rotCx = 0, rotCy = 0;
@@ -60,10 +64,17 @@ public abstract class GShape implements Cloneable{
     public boolean isSelected() {
         return isSelected;
     }
-
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
+    public Color getLineColor() {
+        return lineColor;
+    }
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
+    }
+    public Color getFillColor() { return fillColor; }
+    public void setFillColor(Color fillColor) { this.fillColor = fillColor; }
 
     protected Ellipse2D getAnchor(int x, int y) {
         //타원 생성 - 타원의 좌표와 크기를 float(32bit)로 저장
@@ -110,6 +121,13 @@ public abstract class GShape implements Cloneable{
     public void draw (Graphics2D g) {
         g.rotate(this.angle, this.rotCx, this.rotCy);
 
+        //면 채우기
+        if (!this.fillColor.equals(GConstants.EColor.eTransparent.getColor())) {
+            g.setColor(this.fillColor);
+            g.fill(this.shape);
+        }
+
+        g.setColor(this.lineColor);
         g.draw(this.shape);
         if (this.isSelected) {
             this.drawAnchors(g);
@@ -123,6 +141,7 @@ public abstract class GShape implements Cloneable{
         }*/
     }
     protected void drawAnchors(Graphics2D g) {
+        g.setColor(Color.GRAY);
         Rectangle r = this.shape.getBounds();
         int w = r.width;
         int h = r.height;
@@ -180,6 +199,8 @@ public abstract class GShape implements Cloneable{
     }
 
 */
+
+
 
 
 }

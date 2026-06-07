@@ -3,6 +3,8 @@ package global;
 
 import shape.*;
 
+import java.awt.*;
+
 public class GConstants {
 
     public enum EDrawingType {
@@ -41,6 +43,34 @@ public class GConstants {
             return this.drawingType;
         }
     };
+
+
+    public enum EColor {
+        eBlack("검정", Color.BLACK),
+        eWhite("흰색", Color.WHITE),
+        eRed("빨강", Color.RED),
+        eBlue("파랑", Color.BLUE),
+        eYellow("노랑", Color.YELLOW),
+        eGreen("초록", Color.GREEN),
+        eTransparent("투명", new Color(0, 0, 0, 0)); // 투명색 처리
+
+        private final String name;
+        private final Color color;
+
+        private EColor(String name, Color color) {
+            this.name = name;
+            this.color = color;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public Color getColor() {
+            return this.color;
+        }
+    };
+
 
 
 }

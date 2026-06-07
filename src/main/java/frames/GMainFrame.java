@@ -22,7 +22,7 @@ public class GMainFrame extends JFrame {
         //생성자에 속성을 채운다.
         //set attributes
         super("GmainFrame");
-        this.setSize(600, 400);
+        this.setSize(800, 400);
         this.setLocation(200, 200);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
@@ -37,9 +37,8 @@ public class GMainFrame extends JFrame {
         this.drawingPanel = new GDrawingPanel();
         this.add(drawingPanel, BorderLayout.CENTER);
 
-        this.drawingPanel.associateWith(this.toolPanel.getToolBar());
-        this.drawingPanel.associateWith(this.toolPanel.getStyleToolBar());
-
+        this.drawingPanel.associateWith(this.toolPanel);
+        this.toolPanel.getColorBar().associateWith(this.drawingPanel);
     }
 
     /*private class ToolButtonActionHandler implements ActionListener {

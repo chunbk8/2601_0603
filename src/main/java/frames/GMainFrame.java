@@ -12,8 +12,8 @@ public class GMainFrame extends JFrame {
     //component 자식 부품  (얘도 어그리게이션)
     private GMenuBar menuBar;
     private GToolPanel toolPanel;
-
     private GDrawingPanel drawingPanel;
+    private GStatusBar statusBar;
 
     //associations 친구 관계 (얘도 어그리게이션)
     //private GDirectory directory;
@@ -21,7 +21,7 @@ public class GMainFrame extends JFrame {
     public GMainFrame() {
         //생성자에 속성을 채운다.
         //set attributes
-        super("GmainFrame");
+        super("그림판");
         this.setSize(800, 400);
         this.setLocation(200, 200);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,8 +37,14 @@ public class GMainFrame extends JFrame {
         this.drawingPanel = new GDrawingPanel();
         this.add(drawingPanel, BorderLayout.CENTER);
 
+        this.statusBar = new GStatusBar();
+        this.add(statusBar, BorderLayout.SOUTH);
+
+        this.menuBar.getFileMenu().associateWith(this.drawingPanel);
         this.drawingPanel.associateWith(this.toolPanel);
+        this.drawingPanel.associateWith(this.statusBar);
         this.toolPanel.getColorBar().associateWith(this.drawingPanel);
+        this.toolPanel.getStyleToolBar().associateWith(this.drawingPanel);
     }
 
     /*private class ToolButtonActionHandler implements ActionListener {

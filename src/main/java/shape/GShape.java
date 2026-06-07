@@ -7,8 +7,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.RectangularShape;
+import java.io.Serializable;
 
-public abstract class GShape implements Cloneable{
+public abstract class GShape implements Cloneable, Serializable {
+    private static final long serialVersionUID = 1L;
 
     public enum EAnchor {
         eNW, eNN, eNE, eEE, eSE, eSS, eSW, eWW,
@@ -23,6 +25,10 @@ public abstract class GShape implements Cloneable{
     protected Shape shape;
     protected Color lineColor = GConstants.EColor.eBlack.getColor();
     protected Color fillColor = GConstants.EColor.eTransparent.getColor(); // 🌟 추가//default
+
+
+
+    protected int thickness = 5;
 
 //    protected AffineTransform affineTransform;
     protected double angle = 0;
@@ -61,20 +67,15 @@ public abstract class GShape implements Cloneable{
         return shape;
     }
 
-    public boolean isSelected() {
-        return isSelected;
-    }
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-    public Color getLineColor() {
-        return lineColor;
-    }
-    public void setLineColor(Color lineColor) {
-        this.lineColor = lineColor;
-    }
-    public Color getFillColor() { return fillColor; }
-    public void setFillColor(Color fillColor) { this.fillColor = fillColor; }
+    public boolean isEditable() {return false;}
+    public boolean isSelected() {return isSelected;}
+    public void setSelected(boolean selected) {isSelected = selected;}
+    public Color getLineColor() {return lineColor;}
+    public void setLineColor(Color lineColor) {this.lineColor = lineColor;}
+    public Color getFillColor() {return fillColor;}
+    public void setFillColor(Color fillColor) {this.fillColor = fillColor; }
+    public int getThickness() {return thickness;}
+    public void setThickness(int thickness) {this.thickness = thickness;}
 
     protected Ellipse2D getAnchor(int x, int y) {
         //타원 생성 - 타원의 좌표와 크기를 float(32bit)로 저장
@@ -126,9 +127,11 @@ public abstract class GShape implements Cloneable{
             g.setColor(this.fillColor);
             g.fill(this.shape);
         }
-
+        Stroke oldStroke = g.getStroke(); // 앵커를 그릴 때를 대비해 원래의 얇은 펜 굵기 백업
+        g.setStroke(new BasicStroke(this.thickness)); // 내 도형의 굵기로 펜 세팅
         g.setColor(this.lineColor);
         g.draw(this.shape);
+        g.setStroke(oldStroke);
         if (this.isSelected) {
             this.drawAnchors(g);
         }

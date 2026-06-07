@@ -4,16 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="Gpen,GLine 구현 완료">
-      <change afterPath="$PROJECT_DIR$/src/main/java/frames/GColorBar.java" afterDir="false" />
+    <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="GColorBar + fill 구현 완">
+      <change afterPath="$PROJECT_DIR$/src/main/java/frames/GStatusBar.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/shape/GText.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$EDrawingState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GMainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GMainFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GMenuBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GMenuBar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EDrawingType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EDrawingType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EShapeType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EShapeType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/menu/GFileMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/menu/GFileMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape$EAnchor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape$EAnchor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shape/GShape.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frames/GMainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GMainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GToolPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GToolPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/global/GConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/global/GConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GMenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GMenuBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GStyleToolBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GStyleToolBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/menu/GFileMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/menu/GFileMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shape/GShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shape/GShape.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -206,7 +218,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780662182303</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="GColorBar + fill 구현 완">
+      <option name="closed" value="true" />
+      <created>1780810657407</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1780810657407</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -230,7 +250,8 @@
     <MESSAGE value="0605 수정 전 : 초기" />
     <MESSAGE value="0605 : transform 구현완" />
     <MESSAGE value="Gpen,GLine 구현 완료" />
-    <option name="LAST_COMMIT_MESSAGE" value="Gpen,GLine 구현 완료" />
+    <MESSAGE value="GColorBar + fill 구현 완" />
+    <option name="LAST_COMMIT_MESSAGE" value="GColorBar + fill 구현 완" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

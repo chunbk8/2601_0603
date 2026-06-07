@@ -5,6 +5,7 @@ import menu.GFileMenu;
 import javax.swing.*;
 
 public class GMenuBar extends JMenuBar {
+
     private GFileMenu fileMenu;
 
 
@@ -13,4 +14,8 @@ public class GMenuBar extends JMenuBar {
         this.fileMenu = new GFileMenu("File");
         this.add(fileMenu);
     }
+
+    public GFileMenu getFileMenu() {return fileMenu;}
+
+
 }

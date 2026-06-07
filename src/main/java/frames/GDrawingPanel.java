@@ -6,9 +6,7 @@ import transformer.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 
@@ -27,19 +25,22 @@ public class GDrawingPanel extends JPanel {
     private final Vector<GShape> shapes;
     private BufferedImage bufferImage;
     private GTransformer transformer;
+    private JPopupMenu popupMenu;
 
     //associations
     private GShapeToolBar toolBar;
     private GStyleToolBar styleToolBar;
     private GColorBar colorBar;
+    private GStatusBar statusBar;
 
 
     //constructors
     public GDrawingPanel() {
-
         //attributes
         this.setBackground(Color.WHITE);
         this.eDrawingState = EDrawingState.eIdle;
+        this.setLayout(null);
+
 
         //components list
         this.shapes = new Vector<GShape>();
@@ -49,6 +50,8 @@ public class GDrawingPanel extends JPanel {
         MouseHandler mouseHandler = new MouseHandler();
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
+
+        initPopupMenu();
     }
 
     //setters and getters
@@ -59,6 +62,55 @@ public class GDrawingPanel extends JPanel {
         this.toolBar = toolPanel.getToolBar();
         this.styleToolBar = toolPanel.getStyleToolBar();
         this.colorBar = toolPanel.getColorBar();
+    }
+    public void associateWith(GStatusBar statusBar) {
+        this.statusBar = statusBar;
+    }
+
+    public Vector<GShape> getShapes(){
+        return this.shapes;
+    }
+    public void setShapes(Vector<GShape> loadedShapes) {
+        this.shapes.clear();
+        this.shapes.addAll(loadedShapes);
+        if (this.getWidth() > 0 && this.getHeight() > 0) {
+            if (this.bufferImage == null) {
+                this.bufferImage = new java.awt.image.BufferedImage(
+                        this.getWidth(),
+                        this.getHeight(),
+                        java.awt.image.BufferedImage.TYPE_INT_ARGB
+                );
+            }
+        }
+        drawAllShapes();
+    }
+
+    public void exportToImage(java.io.File file) {
+        try {
+            // 1. 도화지와 똑같은 크기의 '사진 촬영용 빈 캔버스'를 새로 하나 만듭니다. (배경을 투명하게 안 하려면 TYPE_INT_RGB 사용)
+            BufferedImage exportImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = exportImage.createGraphics();
+
+            // 2. 배경을 하얗게 칠해줍니다. (안 그러면 배경이 까맣게 나옵니다)
+            g2d.setColor(Color.WHITE);
+            g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+            // 3. 사진을 찍을 때는 조절점(앵커)이 나오면 안 되므로, 임시로 선택을 해제하고 그립니다.
+            for (shape.GShape shape : this.shapes) {
+                boolean wasSelected = shape.isSelected(); // 원래 선택 상태 기억
+                shape.setSelected(false); // 찰칵! 하는 순간만 앵커 숨기기
+                shape.draw(g2d);          // 순수 도형만 그리기
+                shape.setSelected(wasSelected); // 다시 원래대로 복구
+            }
+            g2d.dispose(); // 붓 내려놓기
+
+            // 4. 자바의 마법: 완성된 이미지를 PNG 파일로 컴퓨터에 굽습니다!
+            javax.imageio.ImageIO.write(exportImage, "png", file);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "이미지 저장 중 오류가 발생했습니다.", "에러", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -118,23 +170,27 @@ public class GDrawingPanel extends JPanel {
         if (isChanged) drawAllShapes();
     }
 
+    public void changeSelectedShapeThickness(int thickness) {
+        boolean isChanged = false;
+        for (GShape shape : shapes) {
+            if (shape.isSelected()) {
+                shape.setThickness(thickness);
+                isChanged = true;
+            }
+        }
+        if (isChanged) drawAllShapes();
+    }
+
     private void startTransform(int x, int y) {
         //context check
         if (toolBar.getShapeType() == GConstants.EShapeType.eSelect) { //context
 
-            GShape clickedShape = null;
+            GShape clickedShape = onShape(x,y);
             GShape.EAnchor clickedAnchor = null;
-
-            // 1. 역순 탐색 (위에 겹쳐진 도형부터 마우스 클릭을 감지하기 위함)
-            for (int i = shapes.size() - 1; i >= 0; i--) {
-                GShape shape = shapes.get(i);
-                clickedAnchor = shape.onShape(x, y); // 현재 isSelected 상태를 기반으로 클릭 감지
-
-                if (clickedAnchor != null) {
-                    clickedShape = shape; // 클릭된 도형 기억
-                    break;
-                }
+            if (clickedShape != null) {
+                clickedAnchor = clickedShape.onShape(x,y); // 클릭된 도형 기억
             }
+
 
             // 2. 이제 모든 도형의 선택 상태를 갱신 (클릭된 도형만 true, 나머진 false)
             for (GShape shape : shapes) {
@@ -156,6 +212,9 @@ public class GDrawingPanel extends JPanel {
                     this.colorBar.setLineColorUI(clickedShape.getLineColor());
                     this.colorBar.setFillColorUI(clickedShape.getFillColor());
                 }
+                if (this.styleToolBar != null) {
+                    this.styleToolBar.setPenWidthUI(clickedShape.getThickness());
+                }
             } else {
                 // 빈 바탕을 클릭한 경우 transformer 비우기
                 this.transformer = null;
@@ -173,7 +232,9 @@ public class GDrawingPanel extends JPanel {
                 currentShape.setLineColor(this.colorBar.getLineColor());
                 currentShape.setFillColor(this.colorBar.getFillColor());
             }
-
+            if (this.styleToolBar != null) {
+                currentShape.setThickness(this.styleToolBar.getPenWidth());
+            }
             this.shapes.add(currentShape);
             this.transformer = new GDrawer(currentShape);
             this.transformer.start(x, y);
@@ -202,6 +263,65 @@ public class GDrawingPanel extends JPanel {
             this.transformer = null;
         }
     }
+
+    public void clearAll() {
+        this.shapes.clear();
+        drawAllShapes();
+    }
+
+    private GShape onShape(int x, int y) {
+        // 나중에 그린 도형(맨 위)부터 역순으로 클릭을 검사합니다.
+        for (int i = shapes.size() - 1; i >= 0; i--) {
+            GShape shape = shapes.get(i);
+            if (shape.onShape(x, y) != null) {
+                return shape;
+            }
+        }
+        return null; // 클릭한 곳에 도형이 없으면 null 반환
+    }
+
+    // 🌟 팝업 메뉴를 만들고 버튼 이벤트를 연결하는 메서드
+    private void initPopupMenu() {
+        popupMenu = new javax.swing.JPopupMenu();
+        javax.swing.JMenuItem bringToFrontItem = new javax.swing.JMenuItem("맨 앞으로 가져오기");
+        javax.swing.JMenuItem sendToBackItem = new javax.swing.JMenuItem("맨 뒤로 보내기");
+
+        // '맨 앞으로 가져오기' 클릭 시
+        bringToFrontItem.addActionListener(e -> bringSelectedShapeToFront());
+        // '맨 뒤로 보내기' 클릭 시
+        sendToBackItem.addActionListener(e -> sendSelectedShapeToBack());
+
+        popupMenu.add(bringToFrontItem);
+        popupMenu.add(sendToBackItem);
+    }
+
+    // 🌟 선택된 도형을 리스트 맨 뒤로(화면 맨 앞으로) 보내는 로직
+    private void bringSelectedShapeToFront() {
+        for (int i = 0; i < shapes.size(); i++) {
+            GShape shape = shapes.get(i);
+            if (shape.isSelected()) {
+                shapes.remove(i);       // 현재 위치에서 뽑아내서
+                shapes.add(shape);      // 리스트의 맨 끝으로 삽입! (제일 나중에 그려짐 = 맨 앞)
+                drawAllShapes();        // 화면 갱신
+                return;
+            }
+        }
+    }
+
+    // 🌟 선택된 도형을 리스트 맨 앞으로(화면 맨 뒤로) 보내는 로직
+    private void sendSelectedShapeToBack() {
+        for (int i = 0; i < shapes.size(); i++) {
+            GShape shape = shapes.get(i);
+            if (shape.isSelected()) {
+                shapes.remove(i);       // 현재 위치에서 뽑아내서
+                shapes.add(0, shape);   // 리스트의 0번 인덱스(맨 앞)에 삽입! (제일 먼저 그려짐 = 맨 뒤)
+                drawAllShapes();        // 화면 갱신
+                return;
+            }
+        }
+    }
+
+
 
     private class MouseHandler implements MouseListener, MouseMotionListener {
 
@@ -233,6 +353,9 @@ public class GDrawingPanel extends JPanel {
 
         @Override
         public void mouseMoved(MouseEvent e) {
+            if (statusBar != null) {
+                statusBar.updateCoordinates(e.getX(), e.getY());
+            }
             if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.eNPoint) {
                 if (eDrawingState == EDrawingState.eTransforming) {
                     keepTransform(e.getX(), e.getY());
@@ -253,20 +376,47 @@ public class GDrawingPanel extends JPanel {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            GDrawingPanel.this.requestFocus();
+            if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+                mouseRButtonClicked(e);
+                return;
+            }
+
             if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.e2Point) {
                 if (eDrawingState == EDrawingState.eIdle) { //target state
                     startTransform(e.getX(), e.getY());
                     eDrawingState = EDrawingState.eTransforming;
                 }
             }
+
+        }
+
+        private void mouseRButtonClicked(MouseEvent e) {
+            GShape clickedShape = onShape(e.getX(), e.getY());
+
+            if (clickedShape != null) {
+                // 기존 선택 해제 및 우클릭한 도형만 선택
+                for (GShape shape : shapes) {
+                    shape.setSelected(false);
+                }
+                clickedShape.setSelected(true);
+                drawAllShapes(); // 화면 갱신
+
+                // 팝업 메뉴 띄우기
+                popupMenu.show(GDrawingPanel.this, e.getX(), e.getY());
+            }
         }
         @Override
         public void mouseDragged(MouseEvent e) {
+            if (statusBar != null) {
+                statusBar.updateCoordinates(e.getX(), e.getY());
+            }
             if (toolBar.getShapeType().getDrawingType() == GConstants.EDrawingType.e2Point) {
                 if (eDrawingState == EDrawingState.eTransforming) {
                     keepTransform(e.getX(), e.getY());
                 }
             }
+
 
         }
         @Override

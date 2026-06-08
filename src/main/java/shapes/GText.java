@@ -23,7 +23,7 @@ public class GText extends GShape {
     }
 
     @Override
-    public void setLocation1(int x, int y) {
+    public void setLocation1(int x, int y, boolean isShift) {
         Rectangle2D r = (Rectangle2D) shape;
         int newX = Math.min(this.x0, x);
         int newY = Math.min(this.y0, y);

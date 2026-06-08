@@ -20,7 +20,7 @@ public class GPolygon extends GShape {
     }
 
     @Override
-    public void setLocation1(int x, int y) {
+    public void setLocation1(int x, int y, boolean isShift) {
         if (this.polygon.npoints > 0) {
             // 현재 드래그 중인 마지막 점의 위치를 마우스 좌표로 계속 갱신합니다.
             this.polygon.xpoints[this.polygon.npoints - 1] = x;

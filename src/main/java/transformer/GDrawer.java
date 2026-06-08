@@ -17,14 +17,14 @@ public class GDrawer extends GTransformer {
     }
 
     @Override
-    public void keep(int x, int y) {
-        shape.setLocation1(x, y);
+    public void keep(int x, int y, boolean isShift) {
+        shape.setLocation1(x, y,  isShift);
 
     }
 
     @Override
-    public void finish(int x, int y) {
-        shape.setLocation1(x, y);
+    public void finish(int x, int y, boolean isShift) {
+        shape.setLocation1(x, y,  isShift);
 
     }
     @Override

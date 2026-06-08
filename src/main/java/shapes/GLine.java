@@ -21,7 +21,23 @@ public class GLine extends GShape {
     }
 
     @Override
-    public void setLocation1(int x, int y) {
+    public void setLocation1(int x, int y, boolean isShift) {
+        if (isShift) {
+            int dx = x - this.x0;
+            int dy = y - this.y0;
+
+            // 🌟 선은 45도, 수직, 수평을 스스로 판단합니다.
+            if (Math.abs(dx) > Math.abs(dy) * 2) {
+                y = this.y0; // 수평선
+            } else if (Math.abs(dy) > Math.abs(dx) * 2) {
+                x = this.x0; // 수직선
+            } else {
+                int size = Math.max(Math.abs(dx), Math.abs(dy));
+                x = this.x0 + (dx > 0 ? size : -size);
+                y = this.y0 + (dy > 0 ? size : -size); // 45도 사선
+            }
+        }
+
         Line2D l = (Line2D) shape;
         l.setLine(this.x0, this.y0, x, y);
     }

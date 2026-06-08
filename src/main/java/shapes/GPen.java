@@ -60,7 +60,7 @@ public class GPen extends GShape {
     }
 
     @Override
-    public void setLocation1(int x, int y) {
+    public void setLocation1(int x, int y, boolean isShift) {
         // 드래그할 때마다 마우스 좌표를 수집
         this.points.add(new Point(x, y));
         updatePath();

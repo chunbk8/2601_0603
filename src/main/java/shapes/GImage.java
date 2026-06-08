@@ -44,9 +44,7 @@ public class GImage extends GShape {
         return cloned;
     }
 
-    // 마우스로 그리는 용도가 아니므로 빈 메서드로 둡니다.
-    @Override public void setLocation0(int x, int y) {}
-    @Override public void setLocation1(int x, int y) {}
+
 
     // GRectangle과 동일하게 동작
     @Override

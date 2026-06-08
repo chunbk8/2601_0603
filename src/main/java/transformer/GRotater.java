@@ -21,7 +21,7 @@ public class GRotater extends GTransformer{
     }
 
     @Override
-    public void keep(int x, int y) {
+    public void keep(int x, int y, boolean isShift) {
         double currentAngle = Math.atan2(y - cy, x - cx);
         double dAngle = currentAngle - this.startAngle; // 움직인 만큼의 각도 차이
 
@@ -34,7 +34,7 @@ public class GRotater extends GTransformer{
     }
 
     @Override
-    public void finish(int x, int y) {
+    public void finish(int x, int y,  boolean isShift) {
 
     }
 }

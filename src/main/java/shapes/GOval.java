@@ -16,15 +16,23 @@ public class GOval extends GShape{
         this.y0 = y;
     }
 
-    public void setLocation1(int x, int y) {
-        Ellipse2D r = (Ellipse2D) shape;
+    @Override
+    public void setLocation1(int x, int y, boolean isShift) {
+        if (isShift) {
+            int dx = x - this.x0;
+            int dy = y - this.y0;
+            int size = Math.max(Math.abs(dx), Math.abs(dy));
+            x = this.x0 + (dx > 0 ? size : -size);
+            y = this.y0 + (dy > 0 ? size : -size);
+        }
 
+        Ellipse2D o = (Ellipse2D) shape;
         int newX = Math.min(this.x0, x);
         int newY = Math.min(this.y0, y);
         int w = Math.abs(x - this.x0);
         int h = Math.abs(y - this.y0);
 
-        r.setFrame(newX, newY, w, h);
+        o.setFrame(newX, newY, w, h);
     }
 
     public void translate(int dx, int dy) {

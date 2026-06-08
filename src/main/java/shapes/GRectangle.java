@@ -17,7 +17,17 @@ public class GRectangle extends GShape{
         this.y0=y;
     }
 
-    public void setLocation1(int x, int y) {
+    @Override
+    public void setLocation1(int x, int y, boolean isShift) {
+        // 🌟 내 모양은 내가 결정한다! (Shift가 눌리면 스스로 좌표를 정사각형으로 조작)
+        if (isShift) {
+            int dx = x - this.x0;
+            int dy = y - this.y0;
+            int size = Math.max(Math.abs(dx), Math.abs(dy));
+            x = this.x0 + (dx > 0 ? size : -size);
+            y = this.y0 + (dy > 0 ? size : -size);
+        }
+
         Rectangle r = (Rectangle) shape;
         int newX = Math.min(this.x0, x);
         int newY = Math.min(this.y0, y);

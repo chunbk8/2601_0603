@@ -20,7 +20,7 @@ public class GScale extends GTransformer{
     }
 
     @Override
-    public void keep(int x, int y) {
+    public void keep(int x, int y, boolean isShift) {
         int dx = x - this.x0;
         int dy = y - this.y0;
 
@@ -104,7 +104,7 @@ public class GScale extends GTransformer{
     }
 
     @Override
-    public void finish(int x, int y) {
+    public void finish(int x, int y, boolean isShift) {
 
     }
 }

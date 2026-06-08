@@ -187,7 +187,7 @@ public abstract class GShape implements Cloneable, Serializable {
 
     public void addPoint(int x, int y ) {}
     public void setLocation0(int x, int y) {}
-    public void setLocation1(int x, int y) { }
+    public void setLocation1(int x, int y, boolean isShift) { }
     public void translate(int dx, int dy){}
     public void scale(double sx, double sy, double tx, double ty){}
     public void rotate(double dAngle, double cx, double cy){}

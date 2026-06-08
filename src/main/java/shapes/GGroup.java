@@ -8,7 +8,7 @@ public class GGroup extends GShape {
 
     public GGroup() {
         this.childShapes = new Vector<>();
-        this.shape = new Rectangle(); // 그룹 전체를 감싸는 바운딩 박스
+        this.shape = new Rectangle();
     }
 
     public void addShape(GShape shape) {
@@ -20,7 +20,6 @@ public class GGroup extends GShape {
         return childShapes;
     }
 
-    // 자식 도형들이 추가/변형될 때마다 그룹 전체의 바운딩 박스를 갱신
     private void updateBounds() {
         if (childShapes.isEmpty()) {
             ((Rectangle) shape).setFrame(0, 0, 0, 0);
@@ -37,15 +36,13 @@ public class GGroup extends GShape {
 
     @Override
     public void draw(Graphics2D g) {
-        // 자식 도형들 그리기
         for (GShape child : childShapes) {
             boolean wasSelected = child.isSelected();
-            if (this.isSelected) child.setSelected(false); // 그룹이 선택되었다면 개별 앵커는 숨김
+            if (this.isSelected) child.setSelected(false);
             child.draw(g);
             child.setSelected(wasSelected);
         }
 
-        // 그룹 자체가 선택되었을 때만 점선 테두리와 그룹 앵커 그리기
         if (this.isSelected) {
             Stroke oldStroke = g.getStroke();
             g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 5.0f, new float[]{5.0f}, 0.0f));
@@ -58,7 +55,6 @@ public class GGroup extends GShape {
         }
     }
 
-    // 변형 명령이 들어오면 모든 자식에게 일괄 전달합니다! (GTransformer 수정 필요 없음)
     @Override
     public void translate(int dx, int dy) {
         for (GShape child : childShapes) child.translate(dx, dy);

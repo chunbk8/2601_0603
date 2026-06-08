@@ -14,15 +14,14 @@ public class GPolygon extends GShape {
     @Override
     public void setLocation0(int x, int y) {
         this.polygon.reset();
-        this.polygon.addPoint(x, y); // 고정된 첫 번째 꼭짓점
-        this.polygon.addPoint(x, y); // 마우스를 따라 움직일 두 번째 꼭짓점
+        this.polygon.addPoint(x, y);
+        this.polygon.addPoint(x, y);
         this.polygon.invalidate();
     }
 
     @Override
     public void setLocation1(int x, int y, boolean isShift) {
         if (this.polygon.npoints > 0) {
-            // 현재 드래그 중인 마지막 점의 위치를 마우스 좌표로 계속 갱신합니다.
             this.polygon.xpoints[this.polygon.npoints - 1] = x;
             this.polygon.ypoints[this.polygon.npoints - 1] = y;
 
@@ -37,16 +36,9 @@ public class GPolygon extends GShape {
         this.polygon.invalidate();
     }
 
-    /*@Override
-    public void draw(Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.drawPolyline(polygon.xpoints, polygon.ypoints, polygon.npoints);
-    }*/
-
     @Override
     public GShape clone() {
         GPolygon cloned = (GPolygon) super.clone();
-        // 배열 복사를 통해 원본과 완전히 독립된 새로운 Polygon 객체 생성
         cloned.polygon = new Polygon(
                 Arrays.copyOf(this.polygon.xpoints, this.polygon.npoints),
                 Arrays.copyOf(this.polygon.ypoints, this.polygon.npoints),

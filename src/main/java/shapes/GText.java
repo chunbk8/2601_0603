@@ -5,14 +5,18 @@ import java.awt.geom.Rectangle2D;
 
 public class GText extends GShape {
     private String text;
+    private Font font;
 
     public GText() {
         this.shape = new Rectangle2D.Double();
-        this.text = ""; // 초기 텍스트
+        this.text = ""; //default text
+        this.font = new Font("맑은 고딕", Font.PLAIN, 20); //default style
     }
 
     public void setText(String text) { this.text = text; }
     public String getText() { return text; }
+    public Font getFont() { return font; }
+    public void setFont(Font font) { this.font = font; }
 
     @Override
     public void setLocation0(int x, int y) {
@@ -25,24 +29,46 @@ public class GText extends GShape {
     @Override
     public void setLocation1(int x, int y, boolean isShift) {
         Rectangle2D r = (Rectangle2D) shape;
+
         int newX = Math.min(this.x0, x);
         int newY = Math.min(this.y0, y);
         int w = Math.abs(x - this.x0);
         int h = Math.abs(y - this.y0);
         r.setFrame(newX, newY, w, h);
+        this.rotCx = r.getCenterX();
+        this.rotCy = r.getCenterY();
     }
 
     @Override
     public void draw(Graphics2D g) {
-        super.draw(g); // 부모 클래스의 앵커 및 테두리 렌더링 호출
+
+        g.rotate(this.angle, this.rotCx, this.rotCy);
+
+        if (!this.fillColor.equals(global.GConstants.EColor.eTransparent.getColor())) {
+            g.setColor(this.fillColor);
+            g.fill(this.shape);
+        }
+        Stroke oldStroke = g.getStroke();
+        g.setStroke(new BasicStroke(this.thickness));
+        g.setColor(this.lineColor);
+        g.draw(this.shape);
+        g.setStroke(oldStroke);
 
         if (text != null && !text.isEmpty()) {
             g.setColor(this.textColor);
-            g.setFont(new Font("맑은 고딕", Font.PLAIN, 20)); // 폰트 설정
+            g.setFont(this.font);
+
             Rectangle2D r = (Rectangle2D) shape;
-            // 사각형 테두리 안쪽 여백을 조금 두고 텍스트 렌더링
-            g.drawString(text, (int) r.getX() + 5, (int) r.getY() + 25);
+
+            FontMetrics fm = g.getFontMetrics(this.font);
+            g.drawString(text, (int) r.getX() + 5, (int) r.getY() + fm.getAscent());
         }
+
+        if (this.isSelected) {
+            this.drawAnchors(g);
+        }
+
+        g.rotate(-this.angle, this.rotCx, this.rotCy);
     }
 
     @Override
@@ -50,15 +76,19 @@ public class GText extends GShape {
         GText cloned = (GText) super.clone();
         cloned.shape = (Shape) ((Rectangle2D.Double) this.shape).clone();
         cloned.text = this.text;
+        cloned.font = this.font;
         return cloned;
     }
 
     @Override
     public void translate(int dx, int dy) {
+        super.translate(dx, dy);
         Rectangle2D r = (Rectangle2D) shape;
         r.setFrame(r.getX() + dx, r.getY() + dy, r.getWidth(), r.getHeight());
         this.rotCx += dx;
         this.rotCy += dy;
+
+
     }
 
     @Override

@@ -30,13 +30,11 @@ public abstract class GShape implements Cloneable, Serializable {
 
     protected int thickness = 5;
 
-//    protected AffineTransform affineTransform;
     protected double angle = 0;
     protected double rotCx = 0, rotCy = 0;
 
     public GShape() {
         this.isSelected = false;
-        //this.affineTransform = new AffineTransform();
 
     }
 
@@ -47,27 +45,16 @@ public abstract class GShape implements Cloneable, Serializable {
             if (this.shape instanceof RectangularShape) {
                 cloned.shape = (Shape) (((RectangularShape)this.shape).clone());
             }
-
-            //cloned.affineTransform = (AffineTransform) this.affineTransform.clone();
             return cloned;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /*public AffineTransform getAffineTransform() {
-        return this.affineTransform;
-    }
-
-    public void setAffineTransform(AffineTransform affineTransform) {
-        this.affineTransform = affineTransform;
-    }*/
-
     public Shape getShape() {
         return shape;
     }
 
-    public boolean isEditable() {return false;}
     public boolean isSelected() {return isSelected;}
 
     public void setStyle(Color lineColor, Color fillColor, int thickness){
@@ -86,7 +73,6 @@ public abstract class GShape implements Cloneable, Serializable {
     public void setTextColor(Color textColor) { this.textColor = textColor; }
 
     protected Ellipse2D getAnchor(int x, int y) {
-        //타원 생성 - 타원의 좌표와 크기를 float(32bit)로 저장
         return new Ellipse2D.Float(x-ANCHOR_WIDTH/2, y-ANCHOR_HEIGHT/2, ANCHOR_WIDTH, ANCHOR_HEIGHT);
     }
     public EAnchor onShape(int x, int y) {
@@ -95,12 +81,6 @@ public abstract class GShape implements Cloneable, Serializable {
         double rx = this.rotCx + (x - this.rotCx) * cos - (y - this.rotCy) * sin;
         double ry = this.rotCy + (x - this.rotCx) * sin + (y - this.rotCy) * cos;
         Point p = new Point((int) Math.round(rx), (int) Math.round(ry));
-        /*Point p = new Point(x, y);
-        try {
-            this.affineTransform.inverseTransform(p,p);
-        } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }*/
 
         if(this.isSelected) {
             Rectangle r = this.shape.getBounds();
@@ -130,13 +110,12 @@ public abstract class GShape implements Cloneable, Serializable {
     public void draw (Graphics2D g) {
         g.rotate(this.angle, this.rotCx, this.rotCy);
 
-        //면 채우기
         if (!this.fillColor.equals(GConstants.EColor.eTransparent.getColor())) {
             g.setColor(this.fillColor);
             g.fill(this.shape);
         }
-        Stroke oldStroke = g.getStroke(); // 앵커를 그릴 때를 대비해 원래의 얇은 펜 굵기 백업
-        g.setStroke(new BasicStroke(this.thickness)); // 내 도형의 굵기로 펜 세팅
+        Stroke oldStroke = g.getStroke();
+        g.setStroke(new BasicStroke(this.thickness));
         g.setColor(this.lineColor);
         g.draw(this.shape);
         g.setStroke(oldStroke);
@@ -145,11 +124,7 @@ public abstract class GShape implements Cloneable, Serializable {
         }
 
         g.rotate(-this.angle, this.rotCx, this.rotCy);
-        /*Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
-        g.draw(transformedShape);
-        if (this.isSelected){
-            this.drawAnchors(g);
-        }*/
+
     }
     protected void drawAnchors(Graphics2D g) {
         g.setColor(Color.GRAY);
@@ -158,12 +133,10 @@ public abstract class GShape implements Cloneable, Serializable {
         int h = r.height;
         int x = r.x;
         int y = r.y;
-        g.setStroke(new BasicStroke(1.0f)); // 1픽셀 두께의 실선
-        g.setColor(Color.LIGHT_GRAY);       // 은은한 회색 윤곽선
-        g.drawRect(x, y, w, h);     // 앵커 알맹이를 그리기 전에 원래 펜 설정으로 복구
-        //draw -> fill (채워진 원)
-        //getAnchor() - 타원 생성 / affineTransform : 도형 본인의 변환 정보
-        // createTransformedShape = 변환 정보를 매개변수에 적용 -> 적용된 Shape 객체 반환
+        g.setStroke(new BasicStroke(1.0f));
+        g.setColor(Color.LIGHT_GRAY);
+        g.drawRect(x, y, w, h);
+
         g.fill(getAnchor(x, y));
         g.fill(getAnchor(x + w / 2, y));
         g.fill(getAnchor(x + w, y));
@@ -174,15 +147,6 @@ public abstract class GShape implements Cloneable, Serializable {
         g.fill(getAnchor(x, y + h / 2));
         g.fill(getAnchor(x + w / 2, y - 30));
 
-/*        g.fill(this.affineTransform.createTransformedShape(getAnchor(x,y)));
-        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y)));
-        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w,y)));
-        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w,y+h/2)));
-        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w,y+h)));
-        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y+h)));
-        g.fill(this.affineTransform.createTransformedShape(getAnchor(x,y+h)));
-        g.fill(this.affineTransform.createTransformedShape(getAnchor(x,y+h/2)));
-        g.fill(this.affineTransform.createTransformedShape(getAnchor(x+w/2,y-30)));*/
     }
 
     public void addPoint(int x, int y ) {}
@@ -191,24 +155,5 @@ public abstract class GShape implements Cloneable, Serializable {
     public void translate(int dx, int dy){}
     public void scale(double sx, double sy, double tx, double ty){}
     public void rotate(double dAngle, double cx, double cy){}
-
-
-  /*  private class Anchors {
-        public int w = 15;
-        public int h = 15;
-        private Ellipse2D anchors[];
-        public Anchors() {
-            anchors = new Ellipse2D[EAnchor.values().length-1];
-            for(int i =0; i< anchors.length-1; i++) {
-                this.anchors[i] = new Ellipse2D.Float();
-                this.anchors[i].setFrame(0,0,w,h);
-            }
-        }
-    }
-
-*/
-
-
-
 
 }

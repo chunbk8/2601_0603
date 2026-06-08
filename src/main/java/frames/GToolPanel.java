@@ -22,14 +22,7 @@ public class GToolPanel extends JPanel {
 
     }
 
-    public GShapeToolBar getToolBar() {
-        return toolBar;
-    }
-
-    public GStyleToolBar getStyleToolBar() {
-        return styleToolBar;
-    }
-    public GColorBar getColorBar() {
-        return colorBar;
-    }
+    public GShapeToolBar getToolBar() {return toolBar;}
+    public GStyleToolBar getStyleToolBar() {return styleToolBar;}
+    public GColorBar getColorBar() {return colorBar;}
 }

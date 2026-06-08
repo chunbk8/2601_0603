@@ -77,9 +77,19 @@ public class GScale extends GTransformer{
                 ty = r.getY();
                 break;
         }
+        if (isShift) {
+            double diffX = Math.abs(Math.abs(sx) - 1.0);
+            double diffY = Math.abs(Math.abs(sy) - 1.0);
+            double scaleFactor = (diffX > diffY) ? Math.abs(sx) : Math.abs(sy);
+
+            sx = (sx < 0) ? -scaleFactor : scaleFactor;
+            sy = (sy < 0) ? -scaleFactor : scaleFactor;
+        }
+
         if (Math.abs(w * sx) < 1.0 || Math.abs(h * sy) < 1.0) {
             return;
         }
+
         shape.scale(sx, sy, tx, ty);
         if (sx < 0) {
             if (eAnchor == GShape.EAnchor.eEE) eAnchor = GShape.EAnchor.eWW;

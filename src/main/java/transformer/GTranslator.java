@@ -13,7 +13,6 @@ public class GTranslator extends GTransformer {
 
     }
 
-    //2PointSequence
     @Override
     public void start(int x, int y) {
         this.x0 = x;
@@ -25,15 +24,9 @@ public class GTranslator extends GTransformer {
         int dx = x-x0;
         int dy = y-y0;
 
-        //AffineTransform 을 사용하는 방법
-        /*AffineTransform affineTransform = shape.getAffineTransform();
-        affineTransform.translate(dx,dy);*/
-
-        //Shape이 직접 계산하는 방법
         shape.translate(dx, dy);
         this.x0 = x;
         this.y0 = y;
-        //무슨 의미?
 
     }
     @Override

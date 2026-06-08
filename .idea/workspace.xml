@@ -4,18 +4,64 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="0608 시작">
-      <change afterPath="$PROJECT_DIR$/src/main/java/frames/GLassoUI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/shapes/GGroup.java" afterDir="false" />
+    <list default="true" id="1155e24e-537d-41ff-aa07-9b51884f00ec" name="Changes" comment="리팩터링 전">
+      <change afterPath="$PROJECT_DIR$/src/main/java/frames/GInlineEditor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GColorBar$ColorActionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GColorBar$ColorActionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GColorBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GColorBar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$1.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$EDrawingState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$EDrawingState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$KeyHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$KeyHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel$MouseHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GDrawingPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GLassoUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GLassoUI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GMainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GMainFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GMenuBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GMenuBar.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GPopupMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GPopupMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GShapeToolBar$ActionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GShapeToolBar$ActionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GShapeToolBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GShapeToolBar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GStatusBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GStatusBar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GStyleToolBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GStyleToolBar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GToolPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/frames/GToolPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EColor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EColor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EShapeType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/global/GConstants$EShapeType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/menu/GFileMenu$FileActionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/menu/GFileMenu$FileActionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/menu/GFileMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/menu/GFileMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GGroup.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GGroup.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GImage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GImage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GLine.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GLine.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GOval.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GOval.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GPen.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GPen.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GPolygon.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GPolygon.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GRectangle.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GRectangle.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GShape.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GShape.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GShapeList.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GShapeList.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GText.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/shapes/GText.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GDrawer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GDrawer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GRotater.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GRotater.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GScale.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GScale.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GTransformer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GTransformer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GTranslator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphicsEditor/transformer/GTranslator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GColorBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GColorBar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GLassoUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GLassoUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GMainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GMainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GMenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GMenuBar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frames/GPopupMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GPopupMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GShapeToolBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GShapeToolBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GStatusBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GStatusBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GStyleToolBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GStyleToolBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frames/GToolPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frames/GToolPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/global/GConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/global/GConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/menu/GFileMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/menu/GFileMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GDrawingState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GDrawingState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GGroup.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GImage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GLine.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GOval.java" afterDir="false" />
@@ -23,6 +69,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GPolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GPolygon.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GRectangle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GShape.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GShapeList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GShapeList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/shapes/GText.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shapes/GText.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/transformer/GDrawer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/transformer/GDrawer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/transformer/GRotater.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/transformer/GRotater.java" afterDir="false" />
@@ -260,7 +307,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780876456509</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="리팩터링 전">
+      <option name="closed" value="true" />
+      <created>1780901070170</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1780901070170</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -288,7 +343,8 @@
     <MESSAGE value="Vector&lt;GShape&gt;를 드로잉 패널로부터 분리 전" />
     <MESSAGE value="리펙터링 완료" />
     <MESSAGE value="0608 시작" />
-    <option name="LAST_COMMIT_MESSAGE" value="0608 시작" />
+    <MESSAGE value="리팩터링 전" />
+    <option name="LAST_COMMIT_MESSAGE" value="리팩터링 전" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -300,13 +356,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/transformer/GDrawer.java</url>
-          <line>14</line>
+          <line>13</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/transformer/GDrawer.java</url>
-          <line>20</line>
+          <line>19</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/frames/GDrawingPanel.java</url>
+          <line>441</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

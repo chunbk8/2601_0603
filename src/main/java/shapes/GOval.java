@@ -46,13 +46,11 @@ public class GOval extends GShape{
     public void scale(double sx, double sy, double tx, double ty) {
         Ellipse2D r = (Ellipse2D) shape;
 
-        // 기준점(tx, ty)에서 떨어진 거리만큼 배율(sx, sy)을 곱해줍니다.
         double newX1 = tx + (r.getX() - tx) * sx;
         double newY1 = ty + (r.getY() - ty) * sy;
         double newX2 = tx + (r.getX() + r.getWidth() - tx) * sx;
         double newY2 = ty + (r.getY() + r.getHeight() - ty) * sy;
 
-        // 드래그로 뒤집히는 것 방지 및 좌표 갱신
         r.setFrame(
                 Math.min(newX1, newX2), Math.min(newY1, newY2),
                 Math.abs(newX2 - newX1), Math.abs(newY2 - newY1)

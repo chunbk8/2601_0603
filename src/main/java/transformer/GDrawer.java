@@ -4,7 +4,6 @@ import shapes.GShape;
 
 public class GDrawer extends GTransformer {
     public GDrawer(GShape shape){
-        //수정해야 할 도형을 받아서 부모에 저장시킴
         super(shape);
 
     }

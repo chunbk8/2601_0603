@@ -4,9 +4,10 @@ import javax.swing.*;
 
 public class Main {
     private GMainFrame mainFrame;
+
     public Main() {
         this.mainFrame = new GMainFrame();
-        this.mainFrame.setVisible(true); //그려라! ㅋ 여기서 그리는 이유 나중에 설명
+        this.mainFrame.setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -15,6 +16,7 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
-        Main main = new Main();
+            Main main = new Main();
+
     }
 }

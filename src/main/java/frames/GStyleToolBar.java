@@ -2,76 +2,70 @@ package frames;
 
 import shapes.GDrawingState;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 
 public class GStyleToolBar extends JToolBar {
-    private final int MIN_WIDTH = 1;
-    private final int MAX_WIDTH = 50;
+    private JSlider thicknessSlider;
+    private JComboBox<String> fontCombo;
+    private JComboBox<Integer> sizeCombo;
 
-    private JTextField txtValue;
     private GDrawingPanel drawingPanel;
-    private GDrawingState drawingState; // 이제 이 친구가 진실의 원천입니다!
+    private GDrawingState drawingState;
 
     public GStyleToolBar() {
-        // 초기값은 1로 시작
-        txtValue = new JTextField("1", 3);
-        txtValue.setHorizontalAlignment(JTextField.CENTER);
-        txtValue.setEditable(true);
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
+        this.setFloatable(false);
 
-        JButton btnUp = new JButton("▲");
-        JButton btnDown = new JButton("▼");
 
-        // 입력값 변경 로직
-        txtValue.addActionListener(e -> {
-            try {
-                int val = Integer.parseInt(txtValue.getText());
-                if (val >= MIN_WIDTH && val <= MAX_WIDTH) {
-                    updateThickness(val);
-                } else {
-                    txtValue.setText(String.valueOf(drawingState.getThickness()));
-                }
-            } catch (NumberFormatException ex) {
-                txtValue.setText(String.valueOf(drawingState.getThickness()));
+        this.add(new JLabel(" 선 굵기: "));
+        thicknessSlider = new JSlider(1, 20, 5);
+        thicknessSlider.setPreferredSize(new Dimension(60, 40));
+        thicknessSlider.addChangeListener(e -> {
+            if (drawingState != null) {
+                drawingState.setThickness(thicknessSlider.getValue());
+                if (drawingPanel != null) drawingPanel.updateSelectedStyle();
             }
         });
+        this.add(thicknessSlider);
+        this.addSeparator();
 
-        btnUp.addActionListener(e -> {
-            int current = drawingState.getThickness();
-            if (current < MAX_WIDTH) updateThickness(current + 1);
-        });
+        this.add(new JLabel(" 폰트: "));
+        String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        fontCombo = new JComboBox<>(fontNames);
+        fontCombo.setSelectedItem("맑은 고딕");
+        fontCombo.setPreferredSize(new Dimension(60, 30));
+        fontCombo.addActionListener(e -> updateFontState());
+        this.add(fontCombo);
 
-        btnDown.addActionListener(e -> {
-            int current = drawingState.getThickness();
-            if (current > MIN_WIDTH) updateThickness(current - 1);
-        });
 
-        add(new JLabel("펜 굵기: "));
-        add(txtValue);
-        add(btnUp);
-        add(btnDown);
+        this.add(new JLabel(" 크기: "));
+        Integer[] sizes = {8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 48, 72};
+        sizeCombo = new JComboBox<>(sizes);
+        sizeCombo.setSelectedItem(20);
+        sizeCombo.setPreferredSize(new Dimension(40, 30));
+        sizeCombo.addActionListener(e -> updateFontState());
+        this.add(sizeCombo);
     }
 
-    // 🌟 공통 갱신 로직: 상태 객체 수정 -> 패널 그리기 요청
-    private void updateThickness(int thickness) {
-        if (drawingState != null) {
-            drawingState.setThickness(thickness); // 1. 진실 저장
-            txtValue.setText(String.valueOf(thickness)); // 2. UI 갱신
-            if (drawingPanel != null) {
-                drawingPanel.updateSelectedStyle(); // 3. 패널에게 적용 요청
-            }
+
+    private void updateFontState() {
+        if (drawingState != null && drawingPanel != null) {
+            String selectedFont = (String) fontCombo.getSelectedItem();
+            Integer selectedSize = (Integer) sizeCombo.getSelectedItem();
+
+            drawingState.setFontFamily(selectedFont);
+            drawingState.setFontSize(selectedSize);
+
+            drawingPanel.applyFontToSelectedText(selectedFont, selectedSize);
         }
     }
 
     public void associateWith(GDrawingPanel drawingPanel) {
         this.drawingPanel = drawingPanel;
         this.drawingState = drawingPanel.getDrawingState();
-        // 🌟 처음 연결될 때, 초기값으로 UI를 맞춤
-        this.txtValue.setText(String.valueOf(drawingState.getThickness()));
     }
 
-    // 외부에서 속성 변경(예: 도형 클릭 시)이 있을 때 호출
     public void setPenWidthUI(int thickness) {
-        this.txtValue.setText(String.valueOf(thickness));
+        this.thicknessSlider.setValue(thickness);
     }
 }
